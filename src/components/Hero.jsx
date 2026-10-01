@@ -42,18 +42,15 @@ export default function Hero({ onRSVPClick }) {
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-10">
-              <button 
-                onClick={onRSVPClick}
-                className="relative group overflow-hidden px-8 py-4 rounded-full font-black text-white text-lg tracking-wide transition-all transform hover:-translate-y-1 hover:shadow-2xl hover:shadow-violet-600/50 active:scale-95 animate-ticket-flash bg-gradient-to-r from-violet-600 via-pink-600 to-amber-500 flex items-center justify-center gap-2.5"
+              <a 
+                href="#jam-junction"
+                className="px-8 py-4 bg-white/10 hover:bg-white/20 text-white border border-white/25 hover:border-white/40 rounded-full font-bold text-lg transition-all backdrop-blur-md shadow-lg shadow-black/30 flex items-center justify-center gap-2.5 transform hover:-translate-y-0.5 active:scale-95"
                 style={{ color: '#FFFFFF' }}
               >
-                {/* Sweeping Shimmer Beam */}
-                <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-25deg] pointer-events-none animate-shimmer-sweep" />
-
-                <Ticket className="w-5 h-5 text-white" />
-                <span>Book Tickets</span>
-                <ChevronRight className="w-5 h-5 text-white/80 group-hover:translate-x-1 transition-transform" />
-              </button>
+                <Users className="w-5 h-5 text-white" />
+                <span>About Us</span>
+                <ChevronRight className="w-5 h-5 text-white/80" />
+              </a>
               
               <a 
                 href="#jam-pad"
