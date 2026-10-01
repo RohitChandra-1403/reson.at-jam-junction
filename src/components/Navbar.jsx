@@ -18,6 +18,7 @@ export default function Navbar({ onRSVPClick }) {
     { label: 'The Event', href: '#jam-junction' },
     { label: 'Jam Pad', href: '#jam-pad' },
     { label: 'Visual Diary', href: '#gallery' },
+    { label: 'Team Members', href: '#team-members' },
     { label: 'FAQ', href: '#faq' },
   ];
 

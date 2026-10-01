@@ -6,6 +6,7 @@ import VirtualJamPad from './components/VirtualJamPad';
 import JamJunctionEvent from './components/JamJunctionEvent';
 import RSVPModal from './components/RSVPModal';
 import CommunityGallery from './components/CommunityGallery';
+import TeamMembers from './components/TeamMembers';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 
@@ -21,6 +22,7 @@ function App() {
         <JamJunctionEvent />
         <VirtualJamPad />
         <CommunityGallery />
+        <TeamMembers />
         <FAQ />
       </main>
       <Footer />
