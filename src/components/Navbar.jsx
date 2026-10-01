@@ -96,11 +96,11 @@ export default function Navbar({ onRSVPClick, onOpenAdmin }) {
             )}
           </nav>
 
-          {/* Action Button: Eye-Catching Flashing "Book Tickets" Button */}
+          {/* Action Button: Balanced Proportional "Book Tickets" Button */}
           <div className="flex items-center gap-3">
             <button 
               onClick={onRSVPClick}
-              className="relative group overflow-hidden px-6 py-2.5 sm:px-7 sm:py-3 rounded-full font-black text-white text-sm sm:text-base tracking-wide transition-all transform active:scale-95 animate-ticket-flash bg-gradient-to-r from-violet-600 via-pink-600 to-amber-500 hover:opacity-95"
+              className="relative group overflow-hidden px-4 py-2 sm:px-4.5 sm:py-2 rounded-full font-bold text-white text-xs sm:text-sm tracking-wide transition-all transform active:scale-95 animate-ticket-flash bg-gradient-to-r from-violet-600 via-pink-600 to-amber-500 hover:opacity-95 shadow-md shadow-violet-600/20"
               style={{
                 color: '#FFFFFF', // Guaranteed pure white font
               }}
@@ -110,12 +110,12 @@ export default function Navbar({ onRSVPClick, onOpenAdmin }) {
               <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-[-25deg] pointer-events-none animate-shimmer-sweep" />
 
               {/* Button content */}
-              <span className="relative z-10 flex items-center gap-2 font-black text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
-                <Ticket className="w-4 h-4 text-white fill-white/20 animate-bounce" style={{ animationDuration: '2s' }} />
+              <span className="relative z-10 flex items-center gap-1.5 font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                <Ticket className="w-3.5 h-3.5 text-white fill-white/20" />
                 <span>Book Tickets</span>
-                <span className="relative flex h-2 w-2 ml-0.5">
+                <span className="relative flex h-1.5 w-1.5 ml-0.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-90"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"></span>
                 </span>
               </span>
             </button>
@@ -179,10 +179,10 @@ export default function Navbar({ onRSVPClick, onOpenAdmin }) {
                 setMobileMenuOpen(false);
                 onRSVPClick();
               }}
-              className="w-full mt-2 py-3 rounded-full font-black text-white text-base tracking-wide relative overflow-hidden animate-ticket-flash bg-gradient-to-r from-violet-600 via-pink-600 to-amber-500 flex items-center justify-center gap-2"
+              className="w-full mt-2 py-2.5 rounded-full font-bold text-white text-sm tracking-wide relative overflow-hidden animate-ticket-flash bg-gradient-to-r from-violet-600 via-pink-600 to-amber-500 flex items-center justify-center gap-2"
               style={{ color: '#FFFFFF' }}
             >
-              <Ticket className="w-5 h-5 text-white" />
+              <Ticket className="w-4 h-4 text-white" />
               <span>Book Tickets Now</span>
             </button>
           </div>
