@@ -7,15 +7,17 @@ import VirtualJamPad from './components/VirtualJamPad';
 import JamJunctionEvent from './components/JamJunctionEvent';
 import RSVPModal from './components/RSVPModal';
 import AdminTicketVerifierModal from './components/AdminTicketVerifierModal';
+import AdminPanel from './components/AdminPanel';
 import CommunityGallery from './components/CommunityGallery';
 import TeamMembers from './components/TeamMembers';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
-import { ShieldCheck, QrCode } from 'lucide-react';
+import { ShieldCheck, QrCode, LayoutDashboard } from 'lucide-react';
 
 function App() {
   const [isRSVPModalOpen, setIsRSVPModalOpen] = useState(false);
   const [isVerifierOpen, setIsVerifierOpen] = useState(false);
+  const [isAdminPanelOpen, setIsAdminPanelOpen] = useState(false);
   const [verifierTxnId, setVerifierTxnId] = useState('');
   const [verifierPayload, setVerifierPayload] = useState('');
 
@@ -50,7 +52,7 @@ function App() {
       <GsapAmbientEffects />
       <Navbar 
         onRSVPClick={() => setIsRSVPModalOpen(true)} 
-        onOpenAdmin={() => setIsVerifierOpen(true)}
+        onOpenAdmin={() => setIsAdminPanelOpen(true)}
       />
       <ScrollGuitarAnimation />
       <main>
@@ -61,19 +63,31 @@ function App() {
         <TeamMembers />
         <FAQ />
       </main>
-      <Footer onOpenAdmin={() => setIsVerifierOpen(true)} />
+      <Footer onOpenAdmin={() => setIsAdminPanelOpen(true)} />
 
-      {/* Floating Admin Scanner Quick Access Trigger */}
-      <button
-        onClick={() => setIsVerifierOpen(true)}
-        className="fixed bottom-6 left-6 z-40 px-3.5 py-2 rounded-full bg-dusk-900/80 hover:bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 hover:text-emerald-300 text-xs font-bold shadow-[0_4px_20px_rgba(16,185,129,0.25)] backdrop-blur-md transition-all flex items-center gap-2 group hover:scale-105"
-        title="Admin Entry Verification Portal"
-      >
-        <span className="p-1 rounded-full bg-emerald-500/20 group-hover:bg-emerald-500/30">
-          <QrCode className="w-3.5 h-3.5" />
-        </span>
-        <span>Admin Scanner</span>
-      </button>
+      {/* Floating Admin Controls Quick Dock (Bottom-Left) */}
+      <div className="fixed bottom-6 left-6 z-40 flex items-center gap-2">
+        {/* Admin Dashboard Button */}
+        <button
+          onClick={() => setIsAdminPanelOpen(true)}
+          className="px-4 py-2.5 rounded-full bg-dusk-900/90 hover:bg-violet-950/90 border border-violet-500/40 text-violet-300 hover:text-white text-xs font-bold shadow-[0_8px_25px_rgba(139,92,246,0.3)] backdrop-blur-md transition-all flex items-center gap-2 group hover:scale-105"
+          title="Open Admin Registration Tracker Dashboard"
+        >
+          <span className="p-1 rounded-full bg-violet-500/20 group-hover:bg-violet-500/40 text-violet-300">
+            <LayoutDashboard className="w-3.5 h-3.5" />
+          </span>
+          <span>Admin Panel</span>
+        </button>
+
+        {/* Quick QR Scanner Button */}
+        <button
+          onClick={() => setIsVerifierOpen(true)}
+          className="p-2.5 rounded-full bg-dusk-900/90 hover:bg-emerald-950/90 border border-emerald-500/40 text-emerald-400 hover:text-emerald-300 shadow-[0_8px_25px_rgba(16,185,129,0.3)] backdrop-blur-md transition-all hover:scale-105"
+          title="Open Gate QR Camera Scanner"
+        >
+          <QrCode className="w-4 h-4" />
+        </button>
+      </div>
 
       {/* Ticket Booking Modal */}
       {isRSVPModalOpen && (
@@ -83,6 +97,14 @@ function App() {
             setVerifierTxnId(txnId);
             setIsVerifierOpen(true);
           }}
+        />
+      )}
+
+      {/* Admin Registrations Tracker Panel */}
+      {isAdminPanelOpen && (
+        <AdminPanel
+          onClose={() => setIsAdminPanelOpen(false)}
+          onOpenScanner={() => setIsVerifierOpen(true)}
         />
       )}
 

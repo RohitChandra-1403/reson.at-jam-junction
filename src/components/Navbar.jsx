@@ -84,6 +84,16 @@ export default function Navbar({ onRSVPClick, onOpenAdmin }) {
             >
               <span>@reson.at</span>
             </a>
+
+            {onOpenAdmin && (
+              <button
+                onClick={onOpenAdmin}
+                className="px-3 py-1 rounded-full text-xs font-bold text-violet-300 bg-violet-500/10 hover:bg-violet-500/25 border border-violet-500/30 transition-all ml-1 flex items-center gap-1.5"
+                title="Open Admin Registration Dashboard"
+              >
+                <span>Admin</span>
+              </button>
+            )}
           </nav>
 
           {/* Action Button: Eye-Catching Flashing "Book Tickets" Button */}
@@ -153,13 +163,13 @@ export default function Navbar({ onRSVPClick, onOpenAdmin }) {
                   setMobileMenuOpen(false);
                   onOpenAdmin();
                 }}
-                className="w-full py-2.5 px-4 rounded-xl text-sm font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between hover:bg-emerald-500/20 transition-colors"
+                className="w-full py-2.5 px-4 rounded-xl text-sm font-semibold text-violet-300 bg-violet-500/10 border border-violet-500/30 flex items-center justify-between hover:bg-violet-500/20 transition-colors"
               >
                 <span className="flex items-center gap-2">
-                  <QrCode className="w-4 h-4" />
-                  <span>Admin QR Scanner</span>
+                  <ShieldCheck className="w-4 h-4 text-violet-400" />
+                  <span>Admin Panel & Tracker</span>
                 </span>
-                <span className="text-xs bg-emerald-500/20 px-2 py-0.5 rounded-full text-emerald-300">Staff</span>
+                <span className="text-xs bg-violet-500/20 px-2 py-0.5 rounded-full text-violet-300 font-bold">Portal</span>
               </button>
             )}
 
