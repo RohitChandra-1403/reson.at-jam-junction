@@ -189,8 +189,8 @@ export default function Footer() {
         </div>
         
         {/* Massive Interactive Typographic Display: RESON.AT */}
-        <div className="pt-12 pb-6 text-center overflow-hidden">
-          <div className="flex items-center justify-center gap-1 sm:gap-2 md:gap-3 lg:gap-4 tracking-tighter">
+        <div className="pt-14 pb-8 text-center overflow-visible w-full">
+          <div className="flex items-center justify-center flex-nowrap gap-1.5 sm:gap-2 md:gap-3 lg:gap-4 tracking-tighter max-w-5xl mx-auto px-4">
             {LETTERS.map((item, index) => {
               const isHovered = hoveredIndex === index;
 
@@ -202,9 +202,9 @@ export default function Footer() {
                     playHoverNote(item.note);
                   }}
                   onMouseLeave={() => setHoveredIndex(null)}
-                  className={`cursor-pointer inline-block font-black font-display text-5xl sm:text-7xl md:text-8xl lg:text-[10rem] xl:text-[12rem] leading-none transition-all duration-300 transform ${
+                  className={`cursor-pointer inline-block font-black font-display text-4xl sm:text-6xl md:text-7xl lg:text-[5.2rem] xl:text-[6.2rem] leading-none transition-all duration-300 transform select-none ${
                     isHovered
-                      ? `scale-115 -translate-y-4 ${item.color} ${item.glow} z-20`
+                      ? `scale-115 -translate-y-3 ${item.color} ${item.glow} z-20`
                       : 'text-white/[0.08] hover:text-white/20'
                   }`}
                   style={{
@@ -218,7 +218,7 @@ export default function Footer() {
             })}
           </div>
           
-          <p className="text-[11px] font-mono tracking-widest text-gray-500 uppercase mt-2">
+          <p className="text-[11px] font-mono tracking-widest text-gray-500 uppercase mt-4">
             Move cursor over each letter to hear notes & light up the stage
           </p>
         </div>
