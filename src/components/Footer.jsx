@@ -2,14 +2,14 @@ import React, { useState, useRef } from 'react';
 import { Music2, Mail, ArrowUpRight, ArrowUp, Heart, Sparkles, Send, Check } from 'lucide-react';
 
 const LETTERS = [
-  { char: 'R', color: 'hover:text-[#8B5CF6]', glow: 'hover:drop-shadow-[0_0_35px_#8b5cf6]', note: 130.81 },
-  { char: 'E', color: 'hover:text-[#EC4899]', glow: 'hover:drop-shadow-[0_0_35px_#ec4899]', note: 164.81 },
-  { char: 'S', color: 'hover:text-[#F59E0B]', glow: 'hover:drop-shadow-[0_0_35px_#f59e0b]', note: 196.00 },
-  { char: 'O', color: 'hover:text-[#FF5722]', glow: 'hover:drop-shadow-[0_0_35px_#ff5722]', note: 246.94 },
-  { char: 'N', color: 'hover:text-[#38BDF8]', glow: 'hover:drop-shadow-[0_0_35px_#38bdf8]', note: 293.66 },
-  { char: '.', color: 'hover:text-[#10B981]', glow: 'hover:drop-shadow-[0_0_35px_#10b981]', note: 329.63 },
-  { char: 'A', color: 'hover:text-[#A855F7]', glow: 'hover:drop-shadow-[0_0_35px_#a855f7]', note: 392.00 },
-  { char: 'T', color: 'hover:text-[#FBBF24]', glow: 'hover:drop-shadow-[0_0_35px_#fbbf24]', note: 440.00 },
+  { char: 'R', color: 'hover:text-[#A855F7]', glow: 'hover:drop-shadow-[0_0_40px_rgba(168,85,247,0.95)]', note: 130.81 },
+  { char: 'E', color: 'hover:text-[#C084FC]', glow: 'hover:drop-shadow-[0_0_40px_rgba(192,132,252,0.95)]', note: 164.81 },
+  { char: 'S', color: 'hover:text-[#A855F7]', glow: 'hover:drop-shadow-[0_0_40px_rgba(168,85,247,0.95)]', note: 196.00 },
+  { char: 'O', color: 'hover:text-[#9333EA]', glow: 'hover:drop-shadow-[0_0_40px_rgba(147,51,234,0.95)]', note: 246.94 },
+  { char: 'N', color: 'hover:text-[#C084FC]', glow: 'hover:drop-shadow-[0_0_40px_rgba(192,132,252,0.95)]', note: 293.66 },
+  { char: '.', color: 'hover:text-[#A855F7]', glow: 'hover:drop-shadow-[0_0_40px_rgba(168,85,247,0.95)]', note: 329.63 },
+  { char: 'A', color: 'hover:text-[#C084FC]', glow: 'hover:drop-shadow-[0_0_40px_rgba(192,132,252,0.95)]', note: 392.00 },
+  { char: 'T', color: 'hover:text-[#A855F7]', glow: 'hover:drop-shadow-[0_0_40px_rgba(168,85,247,0.95)]', note: 440.00 },
 ];
 
 export default function Footer() {
