@@ -33,8 +33,8 @@ export default function RSVPModal({ onClose }) {
 
         {step === 1 ? (
           <div className="p-8">
-            <h2 className="text-3xl font-black mb-2 text-white">Join The Circle</h2>
-            <p className="text-gray-400 mb-8">Generate your VIP Jam Junction Pass.</p>
+            <h2 className="text-3xl font-black mb-2 text-white">Book Your Jam Ticket</h2>
+            <p className="text-gray-400 mb-8">Claim your spot & generate your official Jam Junction pass.</p>
             
             <form onSubmit={handleGeneratePass} className="space-y-6">
               <div>
