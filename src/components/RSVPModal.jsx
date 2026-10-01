@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { 
   X, CheckCircle, Music2, Ticket, Sparkles, Mic2, 
-  Guitar, Disc, Drum, Radio, Share2, Download
+  Guitar, Disc, Drum, Radio, Share2, Download, Users, QrCode, ExternalLink
 } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import confetti from 'canvas-confetti';
+import { saveTicket, generateVerificationUrl } from '../utils/ticketStore';
 
 const INSTRUMENTS = [
   { id: 'Guitarist', label: 'Guitar / Uke', icon: '🎸' },
@@ -14,8 +16,9 @@ const INSTRUMENTS = [
   { id: 'Listener / Supporter', label: 'Pure Listener & Vibes', icon: '🎧' },
 ];
 
-export default function RSVPModal({ onClose }) {
+export default function RSVPModal({ onClose, onOpenVerifier }) {
   const [step, setStep] = useState(1);
+  const [memberCount, setMemberCount] = useState(1);
   const [formData, setFormData] = useState({
     name: '',
     handle: '',
@@ -23,11 +26,41 @@ export default function RSVPModal({ onClose }) {
     songRequest: ''
   });
 
-  const serialNumber = 'JJ-2026-VIP-' + Math.floor(1000 + Math.random() * 9000);
+  const [generatedTicket, setGeneratedTicket] = useState(null);
 
   const handleGeneratePass = (e) => {
     e.preventDefault();
+
+    const now = new Date();
+    const formattedDate = now.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+
+    const txnId = 'TXN-JJ-' + Math.floor(1000000 + Math.random() * 9000000);
+    const ticketId = 'TKT-RESON-2026-' + Math.floor(1000 + Math.random() * 9000);
+
+    const ticketData = {
+      ticketId,
+      transactionId: txnId,
+      mainPerson: formData.name.trim() || 'Jammer Member',
+      memberCount: memberCount,
+      instrument: formData.role,
+      songRequest: formData.songRequest,
+      handle: formData.handle,
+      bookedAt: now.toISOString(),
+      bookedAtFormatted: formattedDate,
+      status: 'Confirmed'
+    };
+
+    saveTicket(ticketData);
+    setGeneratedTicket(ticketData);
     setStep(2);
+
     confetti({
       particleCount: 160,
       spread: 80,
@@ -35,6 +68,10 @@ export default function RSVPModal({ onClose }) {
       colors: ['#F59E0B', '#FF5722', '#8B5CF6', '#EC4899', '#38BDF8']
     });
   };
+
+  const verificationUrl = generatedTicket 
+    ? generateVerificationUrl(generatedTicket.transactionId, generatedTicket) 
+    : '';
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
@@ -75,7 +112,7 @@ export default function RSVPModal({ onClose }) {
                   ALL-ACCESS PASS
                 </span>
                 <span className="font-mono text-xs text-amber-400 font-bold">
-                  {serialNumber}
+                  LIVE RESERVATION
                 </span>
               </div>
 
@@ -83,34 +120,58 @@ export default function RSVPModal({ onClose }) {
                 <span>Book Your Jam Ticket</span>
               </h2>
               <p className="text-xs sm:text-sm text-gray-400 mt-1 font-medium">
-                Claim your spot on the floor & mint your official Reson@ lanyard pass.
+                Reserve seats & generate an official scannable QR ticket for entry.
               </p>
             </div>
             
             {/* Form */}
-            <form onSubmit={handleGeneratePass} className="space-y-5">
+            <form onSubmit={handleGeneratePass} className="space-y-4">
               
-              {/* Name / Musician Moniker */}
+              {/* Main Person Who Booked */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5 flex items-center gap-1.5">
                   <Mic2 className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Name or Artist Moniker <span className="text-pink-500">*</span></span>
+                  <span>Main Person Name <span className="text-pink-500">*</span></span>
                 </label>
                 <input 
                   type="text" 
                   required
                   className="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-violet-400 focus:ring-1 focus:ring-violet-400 transition-all font-medium"
-                  placeholder="e.g. Maya or @jammermaya"
+                  placeholder="Primary contact / who is booking the seats?"
                   value={formData.name}
                   onChange={e => setFormData({...formData, name: e.target.value})}
                 />
+              </div>
+
+              {/* Number of Members Registered */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5 flex items-center gap-1.5">
+                  <Users className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>Number of Members / Seats</span>
+                </label>
+                <div className="flex items-center gap-2">
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <button
+                      key={num}
+                      type="button"
+                      onClick={() => setMemberCount(num)}
+                      className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all border ${
+                        memberCount === num
+                          ? 'bg-gradient-to-r from-violet-600 to-pink-600 text-white border-white/50 shadow-md shadow-violet-500/40 scale-105'
+                          : 'bg-white/5 text-gray-300 hover:bg-white/10 border-white/10'
+                      }`}
+                    >
+                      {num} {num === 1 ? 'Seat' : 'Seats'}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Instrument & Role Selector Chips */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-2 flex items-center gap-1.5">
                   <Guitar className="w-3.5 h-3.5 text-violet-400" />
-                  <span>Your Instrument / Role</span>
+                  <span>Your Vibe / Instrument</span>
                 </label>
                 <div className="grid grid-cols-2 gap-2">
                   {INSTRUMENTS.map((inst) => {
@@ -142,24 +203,10 @@ export default function RSVPModal({ onClose }) {
                 </label>
                 <input 
                   type="text" 
-                  className="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-violet-400 transition-all"
+                  className="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-violet-400 transition-all"
                   placeholder="What track MUST the circle jam together?"
                   value={formData.songRequest}
                   onChange={e => setFormData({...formData, songRequest: e.target.value})}
-                />
-              </div>
-
-              {/* Instagram Handle */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
-                  Instagram Handle <span className="text-gray-500 font-normal">(Optional for jam tag)</span>
-                </label>
-                <input 
-                  type="text" 
-                  className="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-violet-400 transition-all"
-                  placeholder="@yourhandle"
-                  value={formData.handle}
-                  onChange={e => setFormData({...formData, handle: e.target.value})}
                 />
               </div>
 
@@ -170,101 +217,123 @@ export default function RSVPModal({ onClose }) {
                 style={{ color: '#FFFFFF' }}
               >
                 <Ticket className="w-5 h-5 text-white" />
-                <span>Claim Official Backstage Pass</span>
+                <span>Generate Official QR Ticket</span>
                 <Sparkles className="w-4 h-4 text-amber-200" />
               </button>
 
             </form>
 
-            {/* Ticket Tear Notch Cutouts on Left and Right Sides */}
+            {/* Ticket Tear Notch Cutouts */}
             <div className="absolute -left-3.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-dusk-900 border-r-2 border-violet-500/40" />
             <div className="absolute -right-3.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-dusk-900 border-l-2 border-violet-500/40" />
 
           </div>
         ) : (
           
-          /* Step 2: High-End Holographic Backstage Pass Presentation */
+          /* Step 2: High-End Scannable QR Ticket Card */
           <div className="p-6 sm:p-8 flex flex-col items-center justify-center text-center">
             
-            <div className="w-14 h-14 rounded-full bg-emerald-500/20 border border-emerald-400/50 flex items-center justify-center mb-4 text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.4)]">
-              <CheckCircle className="w-8 h-8" />
+            <div className="w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-400/50 flex items-center justify-center mb-3 text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.4)]">
+              <CheckCircle className="w-7 h-7" />
             </div>
 
-            <h2 className="text-2xl sm:text-3xl font-black text-white">You're On The Jam List!</h2>
-            <p className="text-xs sm:text-sm text-gray-300 mt-1 mb-6">
-              Show this pass at the lounge door. Welcome to the circle.
+            <h2 className="text-2xl sm:text-3xl font-black text-white">Ticket Confirmed!</h2>
+            <p className="text-xs sm:text-sm text-gray-300 mt-1 mb-5">
+              Show this QR code at the door for instant admin scanner verification.
             </p>
             
-            {/* The Digital Lanyard Hologram Pass Card */}
-            <div className="w-full bg-gradient-to-br from-[#1e1346] via-[#120e24] to-[#25131e] p-6 rounded-2xl border-2 border-amber-400/50 shadow-2xl relative overflow-hidden text-left group">
+            {/* The Digital Scannable VIP Pass */}
+            <div className="w-full bg-gradient-to-br from-[#1e1346] via-[#120e24] to-[#25131e] p-5 sm:p-6 rounded-2xl border-2 border-amber-400/60 shadow-2xl relative overflow-hidden text-left">
               
-              {/* Top Foil Band */}
+              {/* Top Foil Band with Transaction ID */}
               <div className="flex items-center justify-between border-b border-dashed border-white/20 pb-3 mb-4">
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
                   <span className="text-[11px] font-mono font-bold tracking-widest text-amber-400 uppercase">
-                    BACKSTAGE ALL-ACCESS
+                    ALL-ACCESS QR PASS
                   </span>
                 </div>
-                <span className="text-[10px] font-mono text-gray-400">{serialNumber}</span>
+                <span className="text-[11px] font-mono font-bold text-gray-300">
+                  {generatedTicket?.transactionId}
+                </span>
               </div>
 
-              {/* Pass Holder Information */}
-              <div className="my-4">
-                <p className="text-[10px] uppercase font-bold tracking-wider text-violet-300">Jammer Name</p>
-                <h3 className="text-3xl font-black text-white tracking-tight leading-none mt-0.5 mb-1.5">
-                  {formData.name || 'Indie Musician'}
+              {/* Main Person & Member Count */}
+              <div className="my-3">
+                <p className="text-[10px] uppercase font-bold tracking-wider text-violet-300">
+                  Main Person Who Booked
+                </p>
+                <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight mt-0.5 mb-1.5">
+                  {generatedTicket?.mainPerson}
                 </h3>
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/10 text-xs font-semibold text-amber-300">
-                  <span>{formData.role}</span>
+                
+                <div className="flex flex-wrap gap-2 mt-2">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-cyan-500/20 border border-cyan-400/40 text-xs font-bold text-cyan-300">
+                    <Users className="w-3.5 h-3.5" />
+                    <span>{generatedTicket?.memberCount} Member{generatedTicket?.memberCount > 1 ? 's' : ''} Registered</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-white/10 text-xs font-semibold text-amber-300">
+                    <span>{generatedTicket?.instrument}</span>
+                  </span>
                 </div>
               </div>
 
-              {/* Event Location & Track */}
+              {/* Booking Time & Venue */}
               <div className="grid grid-cols-2 gap-3 my-4 py-3 border-y border-white/10 text-xs">
+                <div>
+                  <span className="text-gray-400 block text-[10px] uppercase">Booked On</span>
+                  <span className="text-white font-mono text-[11px]">
+                    {generatedTicket?.bookedAtFormatted}
+                  </span>
+                </div>
                 <div>
                   <span className="text-gray-400 block text-[10px] uppercase">Venue</span>
                   <span className="text-white font-bold">Reson@ Jam Lounge</span>
                 </div>
-                <div>
-                  <span className="text-gray-400 block text-[10px] uppercase">Pass the Aux Song</span>
-                  <span className="text-pink-300 font-semibold truncate block">
-                    {formData.songRequest ? `"${formData.songRequest}"` : 'Free Jam Choice'}
-                  </span>
-                </div>
               </div>
 
-              {/* Bottom Authentic Barcode & QR Code Section */}
-              <div className="flex items-center justify-between pt-2">
+              {/* Real Scannable QR Code Section */}
+              <div className="flex items-center justify-between pt-2 gap-4">
                 <div>
-                  {/* Barcode visual lines */}
-                  <div className="flex items-center gap-[2px] h-9 mb-1">
-                    {[3, 1, 4, 1, 2, 5, 2, 1, 3, 2, 4, 1, 2, 3, 1, 4, 2, 1, 3, 1].map((w, i) => (
-                      <div 
-                        key={i} 
-                        className="bg-white/80 rounded-sm h-full" 
-                        style={{ width: `${w * 1.5}px` }} 
-                      />
-                    ))}
-                  </div>
-                  <span className="font-mono text-[9px] text-gray-400 tracking-widest">VALID FOR NEXT SESSION</span>
+                  <span className="text-[10px] font-mono font-bold text-emerald-400 tracking-wider uppercase block mb-1">
+                    ✓ SCAN TO VERIFY TICKET
+                  </span>
+                  <p className="text-[11px] text-gray-300 leading-tight">
+                    Admin camera scan displays booking time, seats, and primary identity.
+                  </p>
                 </div>
 
-                <div className="w-14 h-14 bg-white p-1 rounded-lg shadow-md flex items-center justify-center">
-                  <div className="w-full h-full bg-dusk-900 rounded flex flex-col items-center justify-center text-white">
-                    <Music2 className="w-6 h-6 text-amber-400" />
-                    <span className="text-[7px] font-mono">RESON</span>
-                  </div>
+                {/* Actual Scannable QR Code */}
+                <div className="bg-white p-2.5 rounded-xl shadow-lg shrink-0 flex items-center justify-center">
+                  <QRCodeSVG 
+                    value={verificationUrl} 
+                    size={96}
+                    level="M"
+                    includeMargin={false}
+                  />
                 </div>
               </div>
 
             </div>
             
-            {/* Buttons */}
-            <div className="w-full flex gap-3 mt-6">
+            {/* Action Buttons: Test Admin Verification & Done */}
+            <div className="w-full flex flex-col sm:flex-row gap-3 mt-6">
+              <button 
+                onClick={() => {
+                  onClose();
+                  if (onOpenVerifier && generatedTicket) {
+                    onOpenVerifier(generatedTicket.transactionId);
+                  }
+                }}
+                className="flex-1 py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-sm transition-all shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2"
+              >
+                <QrCode className="w-4 h-4" />
+                <span>Test Admin Scan View</span>
+              </button>
+
               <button 
                 onClick={onClose} 
-                className="flex-1 py-3.5 bg-violet-600 hover:bg-violet-500 text-white rounded-xl font-bold text-sm transition-all shadow-lg shadow-violet-600/30"
+                className="py-3 px-6 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold text-sm transition-all"
               >
                 Done
               </button>

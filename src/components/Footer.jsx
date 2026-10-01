@@ -12,7 +12,7 @@ const LETTERS = [
   { char: 'T', color: 'hover:text-[#A855F7]', glow: 'hover:drop-shadow-[0_0_40px_rgba(168,85,247,0.95)]', note: 440.00 },
 ];
 
-export default function Footer() {
+export default function Footer({ onOpenAdmin }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
@@ -231,6 +231,16 @@ export default function Footer() {
             <a href="#" className="hover:text-gray-300 transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-gray-300 transition-colors">Terms of Vibe</a>
             
+            {onOpenAdmin && (
+              <button
+                onClick={onOpenAdmin}
+                className="text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1 font-semibold"
+                title="Open Admin QR Verification Scanner"
+              >
+                <span>Admin Scanner</span>
+              </button>
+            )}
+
             <button
               onClick={scrollToTop}
               className="p-2 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-gray-300 hover:text-white transition-all flex items-center gap-1.5"

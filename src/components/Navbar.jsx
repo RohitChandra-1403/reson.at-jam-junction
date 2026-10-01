@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Music2, Ticket, Sparkles, Menu, X, Radio, ArrowRight } from 'lucide-react';
+import { Music2, Ticket, Sparkles, Menu, X, Radio, ArrowRight, QrCode } from 'lucide-react';
 
-export default function Navbar({ onRSVPClick }) {
+export default function Navbar({ onRSVPClick, onOpenAdmin }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -146,6 +146,22 @@ export default function Navbar({ onRSVPClick }) {
             >
               Follow @reson.at on Instagram
             </a>
+
+            {onOpenAdmin && (
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenAdmin();
+                }}
+                className="w-full py-2.5 px-4 rounded-xl text-sm font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between hover:bg-emerald-500/20 transition-colors"
+              >
+                <span className="flex items-center gap-2">
+                  <QrCode className="w-4 h-4" />
+                  <span>Admin QR Scanner</span>
+                </span>
+                <span className="text-xs bg-emerald-500/20 px-2 py-0.5 rounded-full text-emerald-300">Staff</span>
+              </button>
+            )}
 
             {/* Mobile Flashing Book Tickets Button */}
             <button
