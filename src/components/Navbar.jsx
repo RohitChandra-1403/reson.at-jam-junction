@@ -64,12 +64,12 @@ export default function Navbar({ onRSVPClick, onOpenAdmin }) {
           </div>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1 lg:gap-2 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full backdrop-blur-lg shadow-inner">
+          <nav className="hidden md:flex items-center gap-1 bg-white/5 border border-white/10 px-2.5 py-1.5 rounded-full backdrop-blur-lg shadow-inner">
             {navLinks.map((link) => (
               <a 
                 key={link.label}
                 href={link.href} 
-                className="relative px-3.5 py-1.5 rounded-full text-sm font-semibold text-gray-300 hover:text-white transition-all duration-200 group overflow-hidden"
+                className="relative px-2.5 lg:px-3.5 py-1 rounded-full text-xs lg:text-sm font-semibold text-gray-300 hover:text-white transition-all duration-200 group overflow-hidden"
               >
                 <span className="relative z-10">{link.label}</span>
                 {/* Hover subtle glowing background */}
@@ -81,7 +81,7 @@ export default function Navbar({ onRSVPClick, onOpenAdmin }) {
               href="https://www.instagram.com/reson.at" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="px-3.5 py-1.5 rounded-full text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1"
+              className="px-2.5 lg:px-3.5 py-1 rounded-full text-xs lg:text-sm font-semibold text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1"
             >
               <span>@reson.at</span>
             </a>
@@ -89,7 +89,7 @@ export default function Navbar({ onRSVPClick, onOpenAdmin }) {
             {onOpenAdmin && (
               <button
                 onClick={onOpenAdmin}
-                className="px-3 py-1 rounded-full text-xs font-bold text-violet-300 bg-violet-500/10 hover:bg-violet-500/25 border border-violet-500/30 transition-all ml-1 flex items-center gap-1.5"
+                className="px-2.5 py-0.5 rounded-full text-[11px] lg:text-xs font-bold text-violet-300 bg-violet-500/10 hover:bg-violet-500/25 border border-violet-500/30 transition-all ml-0.5 flex items-center gap-1"
                 title="Open Admin Registration Dashboard"
               >
                 <span>Admin</span>
@@ -97,8 +97,8 @@ export default function Navbar({ onRSVPClick, onOpenAdmin }) {
             )}
           </nav>
 
-          {/* Action Button: Balanced Proportional "Book Tickets" Button */}
-          <div className="flex items-center gap-3">
+          {/* Action Button: Balanced Proportional "Book Tickets" Button with clear spacing */}
+          <div className="flex items-center gap-3 ml-4 sm:ml-6 lg:ml-8 shrink-0">
             <button 
               onClick={onRSVPClick}
               className="relative group overflow-hidden px-4 py-2 sm:px-4.5 sm:py-2 rounded-full font-bold text-white text-xs sm:text-sm tracking-wide transition-all transform active:scale-95 animate-ticket-flash bg-gradient-to-r from-violet-600 via-pink-600 to-amber-500 hover:opacity-95 shadow-md shadow-violet-600/20"

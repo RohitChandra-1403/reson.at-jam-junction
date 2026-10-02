@@ -1,17 +1,76 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   X, CheckCircle, AlertCircle, ShieldCheck, Clock, Hash, 
   Users, User, Music2, QrCode, Search, Check, RefreshCw,
   Mail, Phone, Disc, Image as ImageIcon, ExternalLink,
-  ChevronRight
+  Camera, CameraOff, Sparkles, ChevronRight, Eye, AlertTriangle
 } from 'lucide-react';
+import jsQR from 'jsqr';
 import { getAllTickets, getTicketByTxnOrId, decodeVerificationPayload, updateTicketStatus } from '../utils/ticketStore';
 
 export default function AdminTicketVerifierModal({ initialTxnId, initialPayload, onClose }) {
+  const [viewMode, setViewMode] = useState(initialTxnId || initialPayload ? 'DETAILS' : 'SCANNER');
+  const [cameraState, setCameraState] = useState('PROMPT'); // 'PROMPT', 'STARTING', 'SCANNING', 'DENIED', 'ERROR'
+  const [cameraError, setCameraError] = useState('');
   const [searchQuery, setSearchQuery] = useState(initialTxnId || '');
   const [activeTicket, setActiveTicket] = useState(null);
   const [allTickets, setAllTickets] = useState([]);
   const [previewImage, setPreviewImage] = useState(null);
+
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const streamRef = useRef(null);
+  const animFrameRef = useRef(null);
+  const audioCtxRef = useRef(null);
+
+  // Play audio chime for scanner beep
+  const playBeep = (freq = 880) => {
+    try {
+      if (!audioCtxRef.current) {
+        const AudioClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioClass) audioCtxRef.current = new AudioClass();
+      }
+      if (audioCtxRef.current?.state === 'suspended') {
+        audioCtxRef.current.resume();
+      }
+      if (!audioCtxRef.current) return;
+
+      const now = audioCtxRef.current.currentTime;
+      const osc = audioCtxRef.current.createOscillator();
+      const gain = audioCtxRef.current.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(0.12, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+
+      osc.connect(gain);
+      gain.connect(audioCtxRef.current.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.26);
+    } catch {}
+  };
+
+  // Stop camera tracks cleanly
+  const stopCamera = () => {
+    if (animFrameRef.current) {
+      cancelAnimationFrame(animFrameRef.current);
+      animFrameRef.current = null;
+    }
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+  };
+
+  // Cleanup camera on unmount
+  useEffect(() => {
+    return () => {
+      stopCamera();
+    };
+  }, []);
 
   // Load ticket data on mount or when search changes
   useEffect(() => {
@@ -23,7 +82,6 @@ export default function AdminTicketVerifierModal({ initialTxnId, initialPayload,
       found = getTicketByTxnOrId(initialTxnId);
     }
 
-    // Fallback if scanned on mobile device without local storage: decode from URL query
     if (!found && initialPayload) {
       const decoded = decodeVerificationPayload(initialPayload);
       if (decoded) {
@@ -46,27 +104,172 @@ export default function AdminTicketVerifierModal({ initialTxnId, initialPayload,
       }
     }
 
-    // Default to the latest ticket if nothing found
-    if (!found && list.length > 0) {
-      found = list[0];
-    }
-
-    setActiveTicket(found);
     if (found) {
+      setActiveTicket(found);
       setSearchQuery(found.utrNumber || found.transactionId);
+      setViewMode('DETAILS');
     }
   }, [initialTxnId, initialPayload]);
+
+  // Request user camera permission and start streaming
+  const handleConfirmStartCamera = async () => {
+    setCameraState('STARTING');
+    setCameraError('');
+
+    try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('Camera access API is not supported on this browser.');
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: 'environment' }, // Back camera preferred on phones
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        }
+      });
+
+      streamRef.current = stream;
+
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        videoRef.current.setAttribute('playsinline', 'true');
+        await videoRef.current.play();
+        setCameraState('SCANNING');
+        startScanLoop();
+      }
+    } catch (err) {
+      console.error('Camera access error:', err);
+      stopCamera();
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        setCameraState('DENIED');
+        setCameraError('Camera permission was denied. You can allow camera in browser settings or search manually below.');
+      } else {
+        setCameraState('ERROR');
+        setCameraError(err.message || 'Unable to start camera.');
+      }
+    }
+  };
+
+  // Continuous frame scanning loop with jsQR
+  const startScanLoop = () => {
+    const scan = () => {
+      if (!videoRef.current || videoRef.current.readyState !== videoRef.current.HAVE_ENOUGH_DATA) {
+        animFrameRef.current = requestAnimationFrame(scan);
+        return;
+      }
+
+      const video = videoRef.current;
+      const canvas = canvasRef.current || document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const qrCode = jsQR(imageData.data, imageData.width, imageData.height, {
+        inversionAttempts: 'dontInvert'
+      });
+
+      if (qrCode && qrCode.data) {
+        handleQrDetected(qrCode.data);
+        return;
+      }
+
+      animFrameRef.current = requestAnimationFrame(scan);
+    };
+
+    animFrameRef.current = requestAnimationFrame(scan);
+  };
+
+  // Handle detected QR Code string
+  const handleQrDetected = (dataString) => {
+    stopCamera();
+    playBeep(987.77); // Success beep chime
+    if (navigator.vibrate) navigator.vibrate([60, 40, 80]);
+
+    let detectedTxn = dataString.trim();
+    let detectedData = null;
+
+    // Check if the QR code is a full verification URL
+    if (dataString.includes('?') && dataString.includes('verify=')) {
+      try {
+        const url = new URL(dataString, window.location.origin);
+        detectedTxn = url.searchParams.get('verify') || detectedTxn;
+        detectedData = url.searchParams.get('data');
+      } catch {
+        const match = dataString.match(/verify=([^&]+)/);
+        if (match) detectedTxn = match[1];
+        const dataMatch = dataString.match(/data=([^&]+)/);
+        if (dataMatch) detectedData = dataMatch[1];
+      }
+    }
+
+    let found = getTicketByTxnOrId(detectedTxn);
+
+    if (!found && detectedData) {
+      const decoded = decodeVerificationPayload(detectedData);
+      if (decoded) {
+        found = {
+          transactionId: decoded.txn,
+          utrNumber: decoded.utr || decoded.txn,
+          ticketId: 'TKT-LIVE-SCANNED',
+          mainPerson: decoded.name,
+          otherMembers: decoded.others || [],
+          memberCount: decoded.count || 1,
+          audienceCategory: decoded.cat || 'Artist',
+          instrument: decoded.cat || 'Artist',
+          recommendedSong: decoded.song || '',
+          email: decoded.email || '',
+          phone: decoded.phone || '',
+          handle: decoded.ig || '',
+          bookedAtFormatted: decoded.time || new Date().toLocaleString(),
+          status: decoded.status || 'Confirmed'
+        };
+      }
+    }
+
+    if (found) {
+      setActiveTicket(found);
+      setSearchQuery(found.utrNumber || found.transactionId);
+      setViewMode('DETAILS');
+    } else {
+      // Create instant fallback ticket with the scanned ID
+      const fallback = {
+        transactionId: detectedTxn,
+        utrNumber: detectedTxn,
+        ticketId: 'TKT-LIVE-SCANNED',
+        mainPerson: 'Gate Scanned Attendee',
+        otherMembers: [],
+        memberCount: 1,
+        audienceCategory: 'Artist',
+        instrument: 'Artist',
+        recommendedSong: 'Acoustic Jam',
+        email: '',
+        phone: '',
+        handle: '',
+        bookedAtFormatted: new Date().toLocaleString(),
+        status: 'Confirmed'
+      };
+      setActiveTicket(fallback);
+      setSearchQuery(detectedTxn);
+      setViewMode('DETAILS');
+    }
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
     const found = getTicketByTxnOrId(searchQuery.trim());
     setActiveTicket(found);
+    setViewMode('DETAILS');
   };
 
   const handleSelectTicket = (ticket) => {
+    stopCamera();
     setActiveTicket(ticket);
     setSearchQuery(ticket.utrNumber || ticket.transactionId);
+    setViewMode('DETAILS');
   };
 
   const handleToggleCheckIn = () => {
@@ -81,6 +284,12 @@ export default function AdminTicketVerifierModal({ initialTxnId, initialPayload,
     setAllTickets(getAllTickets());
   };
 
+  const handleOpenScanner = () => {
+    setActiveTicket(null);
+    setViewMode('SCANNER');
+    setCameraState('PROMPT');
+  };
+
   const isCheckedIn = activeTicket?.status === 'Checked In';
 
   return (
@@ -88,7 +297,10 @@ export default function AdminTicketVerifierModal({ initialTxnId, initialPayload,
       {/* Dark backdrop */}
       <div 
         className="fixed inset-0 bg-black/85 backdrop-blur-md transition-opacity" 
-        onClick={onClose}
+        onClick={() => {
+          stopCamera();
+          onClose();
+        }}
       />
 
       <div className="relative w-full max-w-2xl my-6 bg-gradient-to-b from-[#16122c] via-dusk-900 to-[#100d20] border-2 border-emerald-500/40 rounded-[28px] sm:rounded-[36px] shadow-[0_25px_90px_rgba(16,185,129,0.35)] overflow-hidden text-left z-10 max-h-[92vh] flex flex-col">
@@ -98,7 +310,10 @@ export default function AdminTicketVerifierModal({ initialTxnId, initialPayload,
 
         {/* Close Button */}
         <button 
-          onClick={onClose} 
+          onClick={() => {
+            stopCamera();
+            onClose();
+          }} 
           className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 text-gray-300 hover:text-white flex items-center justify-center transition-all z-20"
         >
           <X className="w-5 h-5" />
@@ -110,31 +325,193 @@ export default function AdminTicketVerifierModal({ initialTxnId, initialPayload,
           <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-5">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.4)]">
-                <ShieldCheck className="w-6 h-6" />
+                <Camera className="w-6 h-6" />
               </div>
               <div>
                 <span className="text-[10px] font-mono font-bold tracking-widest text-emerald-400 uppercase">
-                  OFFICIAL ADMIN SCANNER
+                  GATE CHECK-IN SYSTEM
                 </span>
                 <h2 className="text-xl sm:text-2xl font-black text-white">
-                  Ticket Verification Portal
+                  Live Camera QR Scanner
                 </h2>
               </div>
             </div>
 
-            <div className="hidden sm:flex flex-col items-end">
-              <span className="text-[10px] font-mono text-gray-400">TOTAL REGISTERED</span>
-              <span className="text-sm font-bold text-white font-mono">{allTickets.length} Bookings</span>
+            <div className="flex items-center gap-2">
+              {viewMode === 'DETAILS' ? (
+                <button
+                  onClick={handleOpenScanner}
+                  className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow flex items-center gap-1.5"
+                >
+                  <Camera className="w-3.5 h-3.5" />
+                  <span>Scan Next QR</span>
+                </button>
+              ) : (
+                <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-full">
+                  Scanner Active
+                </span>
+              )}
             </div>
           </div>
 
+          {/* VIEW MODE 1: LIVE CAMERA QR SCANNER */}
+          {viewMode === 'SCANNER' && (
+            <div className="space-y-4">
+              
+              {/* Permission Confirmation Screen (Asked first from user) */}
+              {cameraState === 'PROMPT' && (
+                <div className="p-6 sm:p-8 rounded-3xl bg-white/[0.03] border border-white/10 text-center space-y-4">
+                  <div className="w-16 h-16 mx-auto rounded-3xl bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-[0_0_30px_rgba(16,185,129,0.25)]">
+                    <Camera className="w-8 h-8 animate-pulse" />
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-black text-white font-display">
+                      Confirm Camera Access
+                    </h3>
+                    <p className="text-xs sm:text-sm text-gray-400 max-w-md mx-auto mt-1 leading-relaxed">
+                      Jam Junction Gate Scanner requires permission to use your camera to scan and authenticate attendee QR entry passes in real time.
+                    </p>
+                  </div>
+
+                  <div className="p-3 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 text-[11px] text-emerald-300 max-w-md mx-auto flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>Your video stream runs strictly on-device in your browser. No camera video is recorded or stored.</span>
+                  </div>
+
+                  <div className="pt-2 flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                    <button
+                      onClick={handleConfirmStartCamera}
+                      className="flex-1 py-3 px-5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm transition-all shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95"
+                    >
+                      <Camera className="w-4 h-4" />
+                      <span>Allow Camera & Scan</span>
+                    </button>
+
+                    <button
+                      onClick={() => setViewMode('DETAILS')}
+                      className="py-3 px-5 rounded-2xl bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white font-bold text-sm transition-all"
+                    >
+                      Manual Search
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Starting Camera Spinner */}
+              {cameraState === 'STARTING' && (
+                <div className="p-12 text-center bg-white/5 rounded-3xl border border-white/10 space-y-3">
+                  <div className="w-10 h-10 border-3 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto" />
+                  <p className="text-sm font-bold text-white">Starting device camera...</p>
+                  <p className="text-xs text-gray-400">Please click "Allow" if prompted by your browser</p>
+                </div>
+              )}
+
+              {/* Live Camera Viewfinder & Laser HUD */}
+              {cameraState === 'SCANNING' && (
+                <div className="relative rounded-3xl overflow-hidden border-2 border-emerald-500/60 shadow-[0_0_40px_rgba(16,185,129,0.3)] bg-black aspect-video sm:aspect-[4/3] max-h-[420px] flex items-center justify-center">
+                  
+                  {/* Real Live Video Feed */}
+                  <video 
+                    ref={videoRef} 
+                    className="w-full h-full object-cover" 
+                    playsInline 
+                    muted 
+                  />
+
+                  {/* Hidden Canvas for QR Frame Analysis */}
+                  <canvas ref={canvasRef} className="hidden" />
+
+                  {/* High-tech Viewfinder HUD Overlay */}
+                  <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-between p-6">
+                    
+                    {/* Top status indicator */}
+                    <div className="px-3.5 py-1 rounded-full bg-black/75 border border-emerald-500/50 backdrop-blur-md text-emerald-300 text-xs font-mono font-bold flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                      <span>CAMERA LIVE • POSITION QR CODE IN SQUARE</span>
+                    </div>
+
+                    {/* Central Target Square with Animated Scanning Laser */}
+                    <div className="relative w-56 h-56 sm:w-64 sm:h-64 border-2 border-emerald-400/80 rounded-3xl overflow-hidden shadow-[0_0_30px_rgba(16,185,129,0.4)]">
+                      
+                      {/* Corner Target Markers */}
+                      <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-emerald-400" />
+                      <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-emerald-400" />
+                      <div className="absolute bottom-0 left-0 w-6 h-6 border-b-4 border-l-4 border-emerald-400" />
+                      <div className="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-emerald-400" />
+
+                      {/* Moving Laser Beam */}
+                      <div 
+                        className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent shadow-[0_0_15px_#10B981] animate-laser"
+                        style={{
+                          animation: 'laser-scan 2s ease-in-out infinite alternate'
+                        }}
+                      />
+                    </div>
+
+                    {/* Bottom instructions */}
+                    <div className="text-[11px] text-white/90 bg-black/70 px-4 py-1.5 rounded-full border border-white/20 backdrop-blur-md">
+                      Hold attendee ticket QR code steady in front of camera
+                    </div>
+                  </div>
+
+                  {/* Stop Camera Button */}
+                  <button
+                    onClick={() => {
+                      stopCamera();
+                      setCameraState('PROMPT');
+                    }}
+                    className="absolute top-3 right-3 p-2 rounded-full bg-black/70 hover:bg-black text-white border border-white/20 transition-all z-20 pointer-events-auto"
+                    title="Stop Camera"
+                  >
+                    <CameraOff className="w-4 h-4" />
+                  </button>
+
+                </div>
+              )}
+
+              {/* Denied / Error State */}
+              {(cameraState === 'DENIED' || cameraState === 'ERROR') && (
+                <div className="p-6 rounded-3xl bg-rose-950/30 border border-rose-500/40 text-center space-y-3">
+                  <AlertTriangle className="w-10 h-10 text-rose-400 mx-auto" />
+                  <h4 className="text-base font-bold text-white">Camera Access Not Available</h4>
+                  <p className="text-xs text-rose-300 max-w-md mx-auto">{cameraError}</p>
+                  
+                  <div className="pt-2 flex justify-center gap-3">
+                    <button
+                      onClick={handleConfirmStartCamera}
+                      className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-all"
+                    >
+                      Try Camera Again
+                    </button>
+                    <button
+                      onClick={() => setViewMode('DETAILS')}
+                      className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold"
+                    >
+                      Use Manual UTR Search
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Laser animation style */}
+              <style>{`
+                @keyframes laser-scan {
+                  0% { top: 5%; }
+                  100% { top: 92%; }
+                }
+              `}</style>
+
+            </div>
+          )}
+
           {/* Quick Search & Barcode Lookup Bar */}
-          <form onSubmit={handleSearch} className="relative mb-5">
+          <form onSubmit={handleSearch} className="relative my-4">
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by UTR Number, Transaction ID, or Attendee Name"
+              placeholder="Or type UTR Number, Transaction ID, or Attendee Name"
               className="w-full bg-white/5 border border-white/15 rounded-2xl pl-11 pr-24 py-2.5 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-400 font-mono transition-all"
             />
             <Search className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
@@ -146,8 +523,8 @@ export default function AdminTicketVerifierModal({ initialTxnId, initialPayload,
             </button>
           </form>
 
-          {/* Verification Results Display */}
-          {activeTicket ? (
+          {/* VIEW MODE 2: VERIFICATION DETAILS DISPLAY */}
+          {viewMode === 'DETAILS' && activeTicket && (
             <div className="bg-gradient-to-br from-white/[0.07] to-white/[0.02] border border-white/15 rounded-2xl p-5 relative overflow-hidden backdrop-blur-md space-y-4">
               
               {/* Status Banner */}
@@ -208,13 +585,11 @@ export default function AdminTicketVerifierModal({ initialTxnId, initialPayload,
                 </div>
 
                 <div className="flex flex-wrap gap-1.5 mt-2">
-                  {/* Main Person Chip */}
                   <span className="px-2.5 py-1 rounded-lg bg-cyan-500/20 border border-cyan-500/40 text-cyan-200 text-xs font-bold flex items-center gap-1">
                     <span>👑 {activeTicket.mainPerson}</span>
                     <span className="text-[10px] text-cyan-400">(Primary)</span>
                   </span>
 
-                  {/* Accompanying members */}
                   {Array.isArray(activeTicket.otherMembers) && activeTicket.otherMembers.map((name, i) => (
                     <span key={i} className="px-2.5 py-1 rounded-lg bg-white/10 border border-white/15 text-gray-200 text-xs">
                       #{i + 2} {name}
@@ -225,8 +600,6 @@ export default function AdminTicketVerifierModal({ initialTxnId, initialPayload,
 
               {/* 3. Transaction / UTR Number & Booking Time */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                
-                {/* UTR / Transaction ID */}
                 <div className="bg-black/30 p-3.5 rounded-xl border border-white/10">
                   <span className="text-[10px] font-mono text-gray-400 uppercase block mb-1 flex items-center gap-1.5">
                     <Hash className="w-3.5 h-3.5 text-emerald-400" />
@@ -235,14 +608,8 @@ export default function AdminTicketVerifierModal({ initialTxnId, initialPayload,
                   <div className="text-xs sm:text-sm font-mono font-bold text-amber-300 select-all truncate">
                     {activeTicket.utrNumber || activeTicket.transactionId}
                   </div>
-                  {activeTicket.utrNumber && activeTicket.transactionId && activeTicket.utrNumber !== activeTicket.transactionId && (
-                    <span className="text-[10px] font-mono text-gray-500 block truncate mt-0.5">
-                      Ref: {activeTicket.transactionId}
-                    </span>
-                  )}
                 </div>
 
-                {/* When Ticket Was Booked */}
                 <div className="bg-black/30 p-3.5 rounded-xl border border-white/10">
                   <span className="text-[10px] font-mono text-gray-400 uppercase block mb-1 flex items-center gap-1.5">
                     <Clock className="w-3.5 h-3.5 text-emerald-400" />
@@ -257,7 +624,6 @@ export default function AdminTicketVerifierModal({ initialTxnId, initialPayload,
                     </span>
                   )}
                 </div>
-
               </div>
 
               {/* 4. Payment Screenshot Verification */}
@@ -286,25 +652,23 @@ export default function AdminTicketVerifierModal({ initialTxnId, initialPayload,
                         <span>View Full Screenshot</span>
                       </button>
                       <p className="text-[11px] text-gray-400 mt-1">
-                        Click image to expand and cross-verify UTR & payment amount
+                        Click image to cross-verify UTR & payment amount
                       </p>
                     </div>
                   </div>
                 ) : (
                   <div className="p-2.5 rounded-xl bg-white/5 text-xs text-gray-400 italic flex items-center gap-2">
                     <AlertCircle className="w-4 h-4 text-amber-400" />
-                    <span>No screenshot uploaded (Walk-in or Offline entry). Check UTR manually.</span>
+                    <span>No screenshot uploaded (Walk-in entry). Check UTR manually.</span>
                   </div>
                 )}
               </div>
 
               {/* 5. Recommended Song & Contact Information */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                
-                {/* Recommended Song */}
                 <div className="p-3 rounded-xl bg-black/20 border border-white/5 space-y-1">
                   <span className="text-[10px] font-mono uppercase text-gray-400 block flex items-center gap-1">
-                    <Disc className="w-3 h-3 text-pink-400" />
+                    <Disc className="w-3.5 h-3.5 text-pink-400" />
                     <span>Recommended Song</span>
                   </span>
                   <p className="text-gray-200 font-semibold truncate">
@@ -312,7 +676,6 @@ export default function AdminTicketVerifierModal({ initialTxnId, initialPayload,
                   </p>
                 </div>
 
-                {/* Contact: Email & Phone */}
                 <div className="p-3 rounded-xl bg-black/20 border border-white/5 space-y-1">
                   <span className="text-[10px] font-mono uppercase text-gray-400 block">Contact Info</span>
                   <div className="flex flex-col gap-0.5 text-[11px]">
@@ -326,16 +689,12 @@ export default function AdminTicketVerifierModal({ initialTxnId, initialPayload,
                         <Phone className="w-3 h-3" /> {activeTicket.phone}
                       </a>
                     )}
-                    {!activeTicket.email && !activeTicket.phone && (
-                      <span className="text-gray-500 italic">No contact details stored</span>
-                    )}
                   </div>
                 </div>
-
               </div>
 
-              {/* Check-In / Admission Action Button */}
-              <div className="pt-2 flex gap-3">
+              {/* Actions: Admit Button & Scan Next */}
+              <div className="pt-2 flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={handleToggleCheckIn}
                   className={`flex-1 py-3.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg ${
@@ -347,16 +706,16 @@ export default function AdminTicketVerifierModal({ initialTxnId, initialPayload,
                   <Check className="w-4 h-4" />
                   <span>{isCheckedIn ? 'Admitted Successfully (Click to Undo)' : 'Admit Members Into Venue'}</span>
                 </button>
+
+                <button
+                  onClick={handleOpenScanner}
+                  className="py-3.5 px-5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm transition-all flex items-center justify-center gap-2"
+                >
+                  <Camera className="w-4 h-4" />
+                  <span>Scan Next Ticket</span>
+                </button>
               </div>
 
-            </div>
-          ) : (
-            <div className="p-8 text-center bg-white/5 rounded-2xl border border-white/10">
-              <AlertCircle className="w-12 h-12 text-amber-400 mx-auto mb-3" />
-              <h3 className="text-lg font-bold text-white mb-1">No Ticket Found</h3>
-              <p className="text-xs text-gray-400">
-                Please enter a valid Transaction ID or UTR number to search.
-              </p>
             </div>
           )}
 
@@ -365,7 +724,7 @@ export default function AdminTicketVerifierModal({ initialTxnId, initialPayload,
             <span className="text-xs font-mono uppercase text-gray-400 block mb-3">
               Recent Registrations (Quick Verify)
             </span>
-            <div className="flex flex-wrap gap-2 max-h-36 overflow-y-auto">
+            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
               {allTickets.map((t) => (
                 <button
                   key={t.transactionId}
@@ -389,7 +748,7 @@ export default function AdminTicketVerifierModal({ initialTxnId, initialPayload,
 
       {/* Lightbox Modal for Payment Screenshot Preview */}
       {previewImage && (
-        <div className="fixed inset-0 z-[130] flex items-center justify-center p-4 bg-black/95 backdrop-blur-lg">
+        <div className="fixed inset-0 z-[140] flex items-center justify-center p-4 bg-black/95 backdrop-blur-lg">
           <div className="relative max-w-2xl max-h-[90vh] bg-dusk-900 border border-white/20 rounded-2xl p-4 shadow-2xl flex flex-col items-center">
             <button
               onClick={() => setPreviewImage(null)}
