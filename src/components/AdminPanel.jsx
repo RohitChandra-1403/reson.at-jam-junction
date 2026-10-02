@@ -3,7 +3,8 @@ import {
   X, Search, Filter, Download, Plus, CheckCircle2, Clock, 
   Users, User, Ticket, Trash2, ArrowUpDown, RefreshCw, 
   ShieldCheck, QrCode, Music2, Check, ExternalLink, Calendar,
-  Sparkles, AlertCircle, FileSpreadsheet, Eye
+  Sparkles, AlertCircle, FileSpreadsheet, Eye, Mail, Phone,
+  Disc, Image as ImageIcon
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { 
@@ -12,33 +13,34 @@ import {
   generateVerificationUrl 
 } from '../utils/ticketStore';
 
-const INSTRUMENT_OPTIONS = [
-  'All Roles',
-  'Guitarist',
-  'Vocalist',
-  'Percussionist',
-  'Keyboardist',
-  'Other Instrument',
-  'Listener / Supporter'
+const CATEGORY_OPTIONS = [
+  'All Categories',
+  'Artist',
+  'Singers or Vocals',
+  'Listener'
 ];
 
 export default function AdminPanel({ onClose, onOpenScanner }) {
   const [tickets, setTickets] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL'); // ALL, CHECKED_IN, CONFIRMED
-  const [roleFilter, setRoleFilter] = useState('All Roles');
+  const [categoryFilter, setCategoryFilter] = useState('All Categories');
   const [sortBy, setSortBy] = useState('RECENT'); // RECENT, SEATS_DESC, NAME_ASC
   const [copiedTxn, setCopiedTxn] = useState(null);
   const [inspectTicket, setInspectTicket] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null);
 
-  // New Attendee Form State (Manual Registration)
+  // New Attendee Form State (Walk-In Registration)
   const [newAttendee, setNewAttendee] = useState({
     name: '',
-    handle: '',
-    memberCount: 1,
-    instrument: 'Guitarist',
-    songRequest: ''
+    otherMembersText: '',
+    utrNumber: '',
+    audienceCategory: 'Artist',
+    recommendedSong: '',
+    email: '',
+    phone: '',
+    handle: ''
   });
 
   const loadData = () => {
@@ -65,7 +67,7 @@ export default function AdminPanel({ onClose, onOpenScanner }) {
 
   // Delete registration
   const handleDelete = (ticket) => {
-    if (window.confirm(`Are you sure you want to remove registration for ${ticket.mainPerson} (${ticket.transactionId})?`)) {
+    if (window.confirm(`Are you sure you want to remove registration for ${ticket.mainPerson} (${ticket.utrNumber || ticket.transactionId})?`)) {
       const updated = deleteTicket(ticket.transactionId);
       setTickets(updated);
       if (inspectTicket?.transactionId === ticket.transactionId) {
@@ -92,20 +94,31 @@ export default function AdminPanel({ onClose, onOpenScanner }) {
       month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
     });
 
-    const txnId = 'TXN-JJ-' + Math.floor(1000000 + Math.random() * 9000000);
+    const parsedOthers = newAttendee.otherMembersText
+      .split(',')
+      .map(m => m.trim())
+      .filter(Boolean);
+
+    const txnId = newAttendee.utrNumber.trim() || ('TXN-JJ-' + Math.floor(1000000 + Math.random() * 9000000));
     const ticketId = 'TKT-RESON-2026-' + Math.floor(1000 + Math.random() * 9000);
 
     const ticketData = {
       ticketId,
       transactionId: txnId,
+      utrNumber: newAttendee.utrNumber.trim() || txnId,
       mainPerson: newAttendee.name.trim(),
-      memberCount: Number(newAttendee.memberCount) || 1,
-      instrument: newAttendee.instrument,
-      songRequest: newAttendee.songRequest.trim() || 'Walk-in Acoustic Vibe',
-      handle: newAttendee.handle.trim() || '@walkin_jammer',
+      otherMembers: parsedOthers,
+      memberCount: 1 + parsedOthers.length,
+      audienceCategory: newAttendee.audienceCategory,
+      instrument: newAttendee.audienceCategory,
+      recommendedSong: newAttendee.recommendedSong.trim() || 'Acoustic Circle Jam',
+      handle: newAttendee.handle.trim() ? (newAttendee.handle.startsWith('@') ? newAttendee.handle : '@' + newAttendee.handle) : '',
+      email: newAttendee.email.trim(),
+      phone: newAttendee.phone.trim(),
+      paymentScreenshot: null,
       bookedAt: now.toISOString(),
       bookedAtFormatted: formattedDate,
-      status: 'Checked In', // Walk-ins at gate are usually checked in right away
+      status: 'Checked In', // Walk-ins admitted directly
       checkedInAt: now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
     };
 
@@ -114,10 +127,13 @@ export default function AdminPanel({ onClose, onOpenScanner }) {
     setShowAddModal(false);
     setNewAttendee({
       name: '',
-      handle: '',
-      memberCount: 1,
-      instrument: 'Guitarist',
-      songRequest: ''
+      otherMembersText: '',
+      utrNumber: '',
+      audienceCategory: 'Artist',
+      recommendedSong: '',
+      email: '',
+      phone: '',
+      handle: ''
     });
   };
 
@@ -129,11 +145,15 @@ export default function AdminPanel({ onClose, onOpenScanner }) {
     const checkedInMembers = checkedInTickets.reduce((sum, t) => sum + (Number(t.memberCount) || 1), 0);
     const checkInRate = totalMembers > 0 ? Math.round((checkedInMembers / totalMembers) * 100) : 0;
     
-    // Group by instrument
-    const rolesCount = {};
+    // Group by category
+    const catCounts = { Artist: 0, 'Singers or Vocals': 0, Listener: 0 };
     tickets.forEach(t => {
-      const role = t.instrument || 'Jammer';
-      rolesCount[role] = (rolesCount[role] || 0) + (Number(t.memberCount) || 1);
+      const cat = t.audienceCategory || t.instrument || 'Artist';
+      if (catCounts[cat] !== undefined) {
+        catCounts[cat] += (Number(t.memberCount) || 1);
+      } else {
+        catCounts[cat] = (Number(t.memberCount) || 1);
+      }
     });
 
     return {
@@ -142,7 +162,7 @@ export default function AdminPanel({ onClose, onOpenScanner }) {
       checkedInTickets: checkedInTickets.length,
       checkedInMembers,
       checkInRate,
-      rolesCount
+      catCounts
     };
   }, [tickets]);
 
@@ -156,9 +176,13 @@ export default function AdminPanel({ onClose, onOpenScanner }) {
           const matches = 
             t.mainPerson?.toLowerCase().includes(q) ||
             t.transactionId?.toLowerCase().includes(q) ||
+            t.utrNumber?.toLowerCase().includes(q) ||
             t.ticketId?.toLowerCase().includes(q) ||
             t.handle?.toLowerCase().includes(q) ||
-            t.songRequest?.toLowerCase().includes(q);
+            t.email?.toLowerCase().includes(q) ||
+            t.phone?.toLowerCase().includes(q) ||
+            t.recommendedSong?.toLowerCase().includes(q) ||
+            (Array.isArray(t.otherMembers) && t.otherMembers.some(m => m.toLowerCase().includes(q)));
           if (!matches) return false;
         }
 
@@ -166,8 +190,11 @@ export default function AdminPanel({ onClose, onOpenScanner }) {
         if (statusFilter === 'CHECKED_IN' && t.status !== 'Checked In') return false;
         if (statusFilter === 'CONFIRMED' && t.status === 'Checked In') return false;
 
-        // Role filter
-        if (roleFilter !== 'All Roles' && t.instrument !== roleFilter) return false;
+        // Category filter
+        if (categoryFilter !== 'All Categories') {
+          const cat = t.audienceCategory || t.instrument;
+          if (cat !== categoryFilter) return false;
+        }
 
         return true;
       })
@@ -181,7 +208,7 @@ export default function AdminPanel({ onClose, onOpenScanner }) {
         // Default RECENT
         return new Date(b.bookedAt || 0) - new Date(a.bookedAt || 0);
       });
-  }, [tickets, searchQuery, statusFilter, roleFilter, sortBy]);
+  }, [tickets, searchQuery, statusFilter, categoryFilter, sortBy]);
 
   return (
     <div className="fixed inset-0 z-[120] flex items-center justify-center p-2 sm:p-4 md:p-6 overflow-hidden bg-black/85 backdrop-blur-xl">
@@ -210,7 +237,7 @@ export default function AdminPanel({ onClose, onOpenScanner }) {
                 </span>
               </div>
               <p className="text-xs text-gray-400">
-                Track attendees, verify QR codes, admit members, and export event data
+                Track attendees, verify UTR payments & screenshots, admit guests, and export event lists
               </p>
             </div>
           </div>
@@ -316,7 +343,7 @@ export default function AdminPanel({ onClose, onOpenScanner }) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by name, TXN ID, handle, or song..."
+              placeholder="Search by name, UTR number, email, phone, song..."
               className="w-full pl-9 pr-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-violet-500/60 transition-colors"
             />
             {searchQuery && (
@@ -366,13 +393,13 @@ export default function AdminPanel({ onClose, onOpenScanner }) {
               </button>
             </div>
 
-            {/* Role Filter */}
+            {/* Category Filter */}
             <select
-              value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value)}
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
               className="bg-white/5 border border-white/10 text-gray-300 rounded-xl px-3 py-1.5 focus:outline-none focus:border-violet-500 text-xs"
             >
-              {INSTRUMENT_OPTIONS.map(opt => (
+              {CATEGORY_OPTIONS.map(opt => (
                 <option key={opt} value={opt} className="bg-dusk-900 text-white">
                   {opt}
                 </option>
@@ -417,7 +444,7 @@ export default function AdminPanel({ onClose, onOpenScanner }) {
               </p>
               {searchQuery && (
                 <button
-                  onClick={() => { setSearchQuery(''); setStatusFilter('ALL'); setRoleFilter('All Roles'); }}
+                  onClick={() => { setSearchQuery(''); setStatusFilter('ALL'); setCategoryFilter('All Categories'); }}
                   className="mt-4 px-4 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-xs text-white"
                 >
                   Clear Filters
@@ -428,32 +455,38 @@ export default function AdminPanel({ onClose, onOpenScanner }) {
             filteredTickets.map((ticket) => {
               const isCheckedIn = ticket.status === 'Checked In';
               const qrUrl = generateVerificationUrl(ticket.transactionId, ticket);
+              const category = ticket.audienceCategory || ticket.instrument || 'Artist';
 
               return (
                 <div 
                   key={ticket.transactionId}
-                  className={`p-4 rounded-2xl border transition-all duration-200 flex flex-col md:flex-row md:items-center justify-between gap-4 ${
+                  className={`p-4 rounded-2xl border transition-all duration-200 flex flex-col lg:flex-row lg:items-center justify-between gap-4 ${
                     isCheckedIn
                       ? 'bg-emerald-950/20 border-emerald-500/30 hover:border-emerald-500/50'
                       : 'bg-white/[0.03] border-white/10 hover:border-violet-500/40'
                   }`}
                 >
                   {/* Left: Attendee Details */}
-                  <div className="flex items-start sm:items-center gap-3.5 min-w-0">
+                  <div className="flex items-start gap-3.5 min-w-0">
                     
-                    {/* Role Icon Avatar */}
-                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-violet-600/30 to-amber-500/30 border border-white/15 flex items-center justify-center shrink-0 text-xl shadow-inner">
-                      {ticket.instrument === 'Guitarist' ? '🎸' :
-                       ticket.instrument === 'Vocalist' ? '🎙️' :
-                       ticket.instrument === 'Percussionist' ? '🥁' :
-                       ticket.instrument === 'Keyboardist' ? '🎹' : '🎵'}
+                    {/* Category Icon Avatar */}
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-violet-600/30 to-amber-500/30 border border-white/15 flex items-center justify-center shrink-0 text-xl shadow-inner">
+                      {category === 'Artist' ? '🎸' :
+                       category === 'Singers or Vocals' ? '🎙️' : '🎧'}
                     </div>
 
                     {/* Information */}
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
+                      
+                      {/* Name & Badges Row */}
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-bold text-sm sm:text-base text-white truncate">
+                        <span className="font-bold text-sm sm:text-base text-white">
                           {ticket.mainPerson}
+                        </span>
+
+                        {/* Audience Category Pill */}
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-violet-500/20 text-violet-300 border border-violet-500/30">
+                          {category}
                         </span>
                         
                         {/* Member Count Pill */}
@@ -472,30 +505,45 @@ export default function AdminPanel({ onClose, onOpenScanner }) {
                         </span>
                       </div>
 
-                      {/* Sub-row: Handle, Instrument, and Song */}
+                      {/* Other Members Names List (if group) */}
+                      {Array.isArray(ticket.otherMembers) && ticket.otherMembers.length > 0 && (
+                        <div className="text-xs text-cyan-300/90 mt-1 flex items-center gap-1 flex-wrap">
+                          <span className="text-gray-400">With:</span>
+                          <span className="font-medium">{ticket.otherMembers.join(', ')}</span>
+                        </div>
+                      )}
+
+                      {/* Contact & Song Sub-row */}
                       <div className="flex items-center gap-3 text-xs text-gray-400 mt-1 flex-wrap">
-                        <span className="text-violet-400 font-medium">{ticket.handle || '@attendee'}</span>
-                        <span>•</span>
-                        <span className="text-gray-300">{ticket.instrument}</span>
-                        {ticket.songRequest && (
-                          <>
-                            <span>•</span>
-                            <span className="italic text-gray-400 truncate max-w-xs" title={ticket.songRequest}>
-                              ♫ "{ticket.songRequest}"
-                            </span>
-                          </>
+                        {ticket.email && (
+                          <a href={`mailto:${ticket.email}`} className="text-violet-400 hover:underline flex items-center gap-1">
+                            <Mail className="w-3 h-3" /> {ticket.email}
+                          </a>
+                        )}
+                        {ticket.phone && (
+                          <a href={`tel:${ticket.phone}`} className="text-emerald-400 hover:underline flex items-center gap-1">
+                            <Phone className="w-3 h-3" /> {ticket.phone}
+                          </a>
+                        )}
+                        {ticket.handle && (
+                          <span className="text-pink-400">{ticket.handle}</span>
+                        )}
+                        {ticket.recommendedSong && (
+                          <span className="italic text-gray-300 truncate max-w-xs flex items-center gap-1">
+                            <Disc className="w-3 h-3 text-pink-400" /> "{ticket.recommendedSong}"
+                          </span>
                         )}
                       </div>
 
-                      {/* Transaction ID & Booking Time */}
+                      {/* Transaction ID / UTR & Booking Time */}
                       <div className="flex items-center gap-3 text-[11px] font-mono text-gray-500 mt-1.5 flex-wrap">
                         <span 
-                          onClick={() => handleCopy(ticket.transactionId)}
-                          className="hover:text-emerald-400 cursor-pointer flex items-center gap-1 transition-colors"
-                          title="Click to copy Transaction ID"
+                          onClick={() => handleCopy(ticket.utrNumber || ticket.transactionId)}
+                          className="hover:text-emerald-400 cursor-pointer flex items-center gap-1 transition-colors text-amber-300/90 font-bold"
+                          title="Click to copy UTR / Transaction ID"
                         >
-                          <span>{ticket.transactionId}</span>
-                          {copiedTxn === ticket.transactionId ? (
+                          <span>UTR: {ticket.utrNumber || ticket.transactionId}</span>
+                          {copiedTxn === (ticket.utrNumber || ticket.transactionId) ? (
                             <Check className="w-3 h-3 text-emerald-400" />
                           ) : null}
                         </span>
@@ -508,12 +556,33 @@ export default function AdminPanel({ onClose, onOpenScanner }) {
                           </>
                         )}
                       </div>
+
                     </div>
                   </div>
 
-                  {/* Right: Actions Controls */}
-                  <div className="flex items-center gap-2 self-end md:self-center shrink-0">
+                  {/* Right: Payment Proof Thumbnail & Actions Controls */}
+                  <div className="flex items-center gap-3 self-end lg:self-center shrink-0">
                     
+                    {/* Payment Screenshot Thumbnail */}
+                    {ticket.paymentScreenshot ? (
+                      <div 
+                        onClick={() => setPreviewImage(ticket.paymentScreenshot)}
+                        className="relative group cursor-pointer"
+                        title="Click to view full payment screenshot"
+                      >
+                        <img 
+                          src={ticket.paymentScreenshot} 
+                          alt="Payment Screenshot" 
+                          className="w-10 h-10 rounded-xl object-cover border border-emerald-500/50 group-hover:scale-105 transition-transform"
+                        />
+                        <span className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full border border-black" />
+                      </div>
+                    ) : (
+                      <span className="text-[10px] font-mono text-gray-500 px-2 py-1 rounded bg-white/5" title="No screenshot uploaded">
+                        No image
+                      </span>
+                    )}
+
                     {/* Toggle Check In Button */}
                     <button
                       onClick={() => handleToggleStatus(ticket)}
@@ -596,8 +665,14 @@ export default function AdminPanel({ onClose, onOpenScanner }) {
             </div>
 
             <div className="bg-white/5 border border-white/10 rounded-xl p-3 text-xs text-left space-y-1 font-mono">
-              <p className="text-gray-400">Txn: <span className="text-white font-bold">{inspectTicket.transactionId}</span></p>
-              <p className="text-gray-400">Role: <span className="text-amber-300 font-sans font-semibold">{inspectTicket.instrument}</span></p>
+              <p className="text-gray-400">UTR / Txn: <span className="text-white font-bold">{inspectTicket.utrNumber || inspectTicket.transactionId}</span></p>
+              <p className="text-gray-400">Category: <span className="text-amber-300 font-sans font-semibold">{inspectTicket.audienceCategory || inspectTicket.instrument}</span></p>
+              {inspectTicket.otherMembers && inspectTicket.otherMembers.length > 0 && (
+                <p className="text-gray-400 font-sans">With: <span className="text-cyan-300">{inspectTicket.otherMembers.join(', ')}</span></p>
+              )}
+              {inspectTicket.recommendedSong && (
+                <p className="text-gray-400 font-sans">Song: <span className="text-pink-300 font-sans">"{inspectTicket.recommendedSong}"</span></p>
+              )}
               <p className="text-gray-400">Booked: <span className="text-gray-200">{inspectTicket.bookedAtFormatted}</span></p>
             </div>
 
@@ -632,7 +707,7 @@ export default function AdminPanel({ onClose, onOpenScanner }) {
       {/* Manual Walk-In Attendee Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-[130] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
-          <div className="relative w-full max-w-md bg-gradient-to-b from-[#181232] to-[#0c0919] border border-violet-500/40 rounded-3xl p-6 shadow-2xl text-left text-white">
+          <div className="relative w-full max-w-md bg-gradient-to-b from-[#181232] to-[#0c0919] border border-violet-500/40 rounded-3xl p-6 shadow-2xl text-left text-white max-h-[90vh] overflow-y-auto">
             <button 
               onClick={() => setShowAddModal(false)}
               className="absolute top-4 right-4 p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-gray-400 hover:text-white"
@@ -662,62 +737,85 @@ export default function AdminPanel({ onClose, onOpenScanner }) {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-1">
-                    Number of Members
-                  </label>
-                  <select
-                    value={newAttendee.memberCount}
-                    onChange={(e) => setNewAttendee({ ...newAttendee, memberCount: Number(e.target.value) })}
-                    className="w-full px-3 py-2 rounded-xl bg-dusk-900 border border-white/10 text-sm text-white focus:outline-none focus:border-violet-500"
-                  >
-                    {[1, 2, 3, 4, 5, 6, 8, 10].map(n => (
-                      <option key={n} value={n}>{n} {n === 1 ? 'Member' : 'Members'}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-1">
-                    Role / Instrument
-                  </label>
-                  <select
-                    value={newAttendee.instrument}
-                    onChange={(e) => setNewAttendee({ ...newAttendee, instrument: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-dusk-900 border border-white/10 text-sm text-white focus:outline-none focus:border-violet-500"
-                  >
-                    <option value="Guitarist">Guitarist</option>
-                    <option value="Vocalist">Vocalist</option>
-                    <option value="Percussionist">Percussionist</option>
-                    <option value="Keyboardist">Keyboardist</option>
-                    <option value="Other Instrument">Other</option>
-                    <option value="Listener / Supporter">Listener</option>
-                  </select>
-                </div>
-              </div>
-
               <div>
                 <label className="block text-xs font-semibold text-gray-300 mb-1">
-                  Instagram Handle / Phone (Optional)
+                  Other Members' Names (comma separated)
                 </label>
                 <input
                   type="text"
-                  value={newAttendee.handle}
-                  onChange={(e) => setNewAttendee({ ...newAttendee, handle: e.target.value })}
-                  placeholder="@handle or phone"
+                  value={newAttendee.otherMembersText}
+                  onChange={(e) => setNewAttendee({ ...newAttendee, otherMembersText: e.target.value })}
+                  placeholder="e.g. Rohan, Sneha, Kabir"
                   className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-violet-500"
                 />
               </div>
 
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-300 mb-1">
+                    Audience Category
+                  </label>
+                  <select
+                    value={newAttendee.audienceCategory}
+                    onChange={(e) => setNewAttendee({ ...newAttendee, audienceCategory: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl bg-dusk-900 border border-white/10 text-xs sm:text-sm text-white focus:outline-none focus:border-violet-500"
+                  >
+                    <option value="Artist">Artist</option>
+                    <option value="Singers or Vocals">Singers / Vocals</option>
+                    <option value="Listener">Listener</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-300 mb-1">
+                    UTR / Txn Number
+                  </label>
+                  <input
+                    type="text"
+                    value={newAttendee.utrNumber}
+                    onChange={(e) => setNewAttendee({ ...newAttendee, utrNumber: e.target.value })}
+                    placeholder="e.g. 481920394812"
+                    className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-xs sm:text-sm text-white focus:outline-none focus:border-violet-500 font-mono"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-300 mb-1">
+                    Email ID
+                  </label>
+                  <input
+                    type="email"
+                    value={newAttendee.email}
+                    onChange={(e) => setNewAttendee({ ...newAttendee, email: e.target.value })}
+                    placeholder="email@example.com"
+                    className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-xs sm:text-sm text-white focus:outline-none focus:border-violet-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-300 mb-1">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    value={newAttendee.phone}
+                    onChange={(e) => setNewAttendee({ ...newAttendee, phone: e.target.value })}
+                    placeholder="9820123456"
+                    className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-xs sm:text-sm text-white focus:outline-none focus:border-violet-500 font-mono"
+                  />
+                </div>
+              </div>
+
               <div>
                 <label className="block text-xs font-semibold text-gray-300 mb-1">
-                  Song / Jam Request
+                  Recommended Song
                 </label>
                 <input
                   type="text"
-                  value={newAttendee.songRequest}
-                  onChange={(e) => setNewAttendee({ ...newAttendee, songRequest: e.target.value })}
+                  value={newAttendee.recommendedSong}
+                  onChange={(e) => setNewAttendee({ ...newAttendee, recommendedSong: e.target.value })}
                   placeholder="e.g. Wonderwall / Acoustic Jam"
                   className="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-violet-500"
                 />
@@ -739,6 +837,29 @@ export default function AdminPanel({ onClose, onOpenScanner }) {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Lightbox Modal for Payment Screenshot Preview */}
+      {previewImage && (
+        <div className="fixed inset-0 z-[140] flex items-center justify-center p-4 bg-black/95 backdrop-blur-lg">
+          <div className="relative max-w-2xl max-h-[90vh] bg-dusk-900 border border-white/20 rounded-2xl p-4 shadow-2xl flex flex-col items-center">
+            <button
+              onClick={() => setPreviewImage(null)}
+              className="absolute top-3 right-3 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <h4 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+              <ImageIcon className="w-4 h-4 text-emerald-400" />
+              <span>Payment Screenshot Verification</span>
+            </h4>
+            <img 
+              src={previewImage} 
+              alt="Full Payment Screenshot" 
+              className="max-h-[75vh] w-auto rounded-xl object-contain border border-white/10"
+            />
           </div>
         </div>
       )}
