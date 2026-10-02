@@ -9,6 +9,7 @@ import RSVPModal from './components/RSVPModal';
 import AdminTicketVerifierModal from './components/AdminTicketVerifierModal';
 import AdminPanel from './components/AdminPanel';
 import CommunityGallery from './components/CommunityGallery';
+import AnonymousChat from './components/AnonymousChat';
 import TeamMembers from './components/TeamMembers';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
@@ -59,6 +60,7 @@ function App() {
         <Hero onRSVPClick={() => setIsRSVPModalOpen(true)} />
         <JamJunctionEvent />
         <VirtualJamPad />
+        <AnonymousChat />
         <CommunityGallery />
         <TeamMembers />
         <FAQ />
