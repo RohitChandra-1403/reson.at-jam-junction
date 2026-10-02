@@ -47,6 +47,7 @@ export default function RSVPModal({ onClose, onOpenVerifier }) {
 
   // Form State
   const [mainPerson, setMainPerson] = useState('');
+  const [seatCount, setSeatCount] = useState(1);
   const [otherMembers, setOtherMembers] = useState([]);
   const [utrNumber, setUtrNumber] = useState('');
   const [paymentScreenshot, setPaymentScreenshot] = useState(null);
@@ -61,9 +62,25 @@ export default function RSVPModal({ onClose, onOpenVerifier }) {
   const [errors, setErrors] = useState({});
   const [generatedTicket, setGeneratedTicket] = useState(null);
 
+  // Seat Count Selection & Sync with Other Members
+  const handleSelectSeatCount = (count) => {
+    setSeatCount(count);
+    const neededFriends = count - 1;
+    if (neededFriends <= 0) {
+      setOtherMembers([]);
+    } else if (neededFriends > otherMembers.length) {
+      const toAdd = neededFriends - otherMembers.length;
+      setOtherMembers([...otherMembers, ...Array(toAdd).fill('')]);
+    } else {
+      setOtherMembers(otherMembers.slice(0, neededFriends));
+    }
+  };
+
   // Add / Remove Extra Members
   const handleAddMember = () => {
-    if (otherMembers.length >= 9) return; // Max 10 total
+    if (seatCount >= 10) return; // Max 10 total
+    const newCount = seatCount + 1;
+    setSeatCount(newCount);
     setOtherMembers([...otherMembers, '']);
   };
 
@@ -76,6 +93,7 @@ export default function RSVPModal({ onClose, onOpenVerifier }) {
   const handleRemoveMember = (index) => {
     const updated = otherMembers.filter((_, i) => i !== index);
     setOtherMembers(updated);
+    setSeatCount(1 + updated.length);
   };
 
   // Payment Screenshot File Upload
@@ -158,7 +176,7 @@ export default function RSVPModal({ onClose, onOpenVerifier }) {
     });
 
     const cleanMembers = otherMembers.map(m => m.trim()).filter(Boolean);
-    const totalCount = 1 + cleanMembers.length;
+    const totalCount = Math.max(seatCount, 1 + cleanMembers.length);
     const txnId = utrNumber.trim().toUpperCase().startsWith('UTR') 
       ? utrNumber.trim().toUpperCase() 
       : 'TXN-JJ-' + Math.floor(1000000 + Math.random() * 9000000);
@@ -283,57 +301,93 @@ export default function RSVPModal({ onClose, onOpenVerifier }) {
                   )}
                 </div>
 
-                {/* Additional Members List with '+' Button */}
-                <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-2.5">
+                {/* Dedicated Number of Seats / Members Section */}
+                <div className="p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 space-y-3">
                   <div className="flex items-center justify-between">
                     <label className="text-xs font-bold uppercase tracking-wider text-gray-300 flex items-center gap-1.5">
                       <Users className="w-3.5 h-3.5 text-cyan-400" />
-                      <span>Other Members / Friends</span>
-                      <span className="text-[11px] font-normal text-gray-400 normal-case">(optional)</span>
+                      <span>Number of Seats / Members <span className="text-pink-500">*</span></span>
                     </label>
 
-                    <button
-                      type="button"
-                      onClick={handleAddMember}
-                      className="px-2.5 py-1 rounded-lg bg-violet-600/30 hover:bg-violet-600/50 border border-violet-400/40 text-violet-300 text-xs font-bold flex items-center gap-1 transition-all"
-                    >
-                      <Plus className="w-3.5 h-3.5" />
-                      <span>Add Member</span>
-                    </button>
+                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                      {seatCount} {seatCount > 1 ? 'Seats (Group Pass)' : 'Seat (Solo Pass)'}
+                    </span>
                   </div>
 
-                  {otherMembers.length === 0 ? (
-                    <p className="text-xs text-gray-500 italic">
-                      Booking for yourself only (1 Seat). Click "+ Add Member" to register accompanying friends.
-                    </p>
+                  {/* Seat Selection Buttons: 1 to 5 Seats */}
+                  <div className="grid grid-cols-5 gap-1.5">
+                    {[1, 2, 3, 4, 5].map((num) => (
+                      <button
+                        key={num}
+                        type="button"
+                        onClick={() => handleSelectSeatCount(num)}
+                        className={`py-2 px-1 rounded-xl text-xs font-bold transition-all border flex flex-col items-center justify-center gap-0.5 ${
+                          seatCount === num
+                            ? 'bg-gradient-to-r from-violet-600 to-pink-600 text-white border-white/60 shadow-lg shadow-violet-500/40 scale-105'
+                            : 'bg-white/5 text-gray-300 hover:bg-white/10 border-white/10'
+                        }`}
+                      >
+                        <span className="text-sm font-black">{num}</span>
+                        <span className="text-[10px] leading-tight text-white/80">{num === 1 ? 'Seat' : 'Seats'}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Dynamic Accompanying Members Names (If > 1 Seat) with '+' button */}
+                  {seatCount > 1 ? (
+                    <div className="pt-2 border-t border-white/10 space-y-2">
+                      <div className="flex items-center justify-between text-xs text-gray-400">
+                        <span>Names of Other {seatCount - 1} Member{seatCount - 1 > 1 ? 's' : ''}:</span>
+                        <button
+                          type="button"
+                          onClick={handleAddMember}
+                          className="px-2 py-0.5 rounded-lg bg-violet-600/30 hover:bg-violet-600/50 border border-violet-400/40 text-violet-300 text-xs font-bold flex items-center gap-1 transition-all"
+                        >
+                          <Plus className="w-3 h-3" />
+                          <span>+1 Seat</span>
+                        </button>
+                      </div>
+
+                      <div className="space-y-2 max-h-40 overflow-y-auto pr-1">
+                        {otherMembers.map((member, idx) => (
+                          <div key={idx} className="flex items-center gap-2">
+                            <span className="text-xs font-mono text-cyan-400 w-16 shrink-0">Seat #{idx + 2}</span>
+                            <input
+                              type="text"
+                              placeholder={`Member #${idx + 2} Full Name (optional)`}
+                              value={member}
+                              onChange={(e) => handleUpdateMember(idx, e.target.value)}
+                              className="flex-1 bg-white/5 border border-white/15 rounded-xl px-3 py-1.5 text-white text-xs sm:text-sm placeholder-gray-500 focus:outline-none focus:border-cyan-400"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveMember(idx)}
+                              className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/25 border border-rose-500/30 text-rose-400 transition-colors"
+                              title="Remove Seat"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   ) : (
-                    <div className="space-y-2">
-                      {otherMembers.map((member, idx) => (
-                        <div key={idx} className="flex items-center gap-2">
-                          <span className="text-xs font-mono text-gray-500 w-5">#{idx + 2}</span>
-                          <input
-                            type="text"
-                            placeholder={`Member #${idx + 2} Full Name`}
-                            value={member}
-                            onChange={(e) => handleUpdateMember(idx, e.target.value)}
-                            className="flex-1 bg-white/5 border border-white/15 rounded-xl px-3 py-1.5 text-white text-xs sm:text-sm placeholder-gray-500 focus:outline-none focus:border-cyan-400"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveMember(idx)}
-                            className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/25 border border-rose-500/30 text-rose-400 transition-colors"
-                            title="Remove Member"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      ))}
+                    <div className="flex items-center justify-between text-xs text-gray-500 pt-1">
+                      <span>Solo Seat for {mainPerson ? mainPerson : 'Primary Attendee'}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleSelectSeatCount(2)}
+                        className="text-violet-400 hover:text-violet-300 text-xs font-bold flex items-center gap-1"
+                      >
+                        <Plus className="w-3 h-3" />
+                        <span>Add Friends</span>
+                      </button>
                     </div>
                   )}
 
                   <div className="pt-1 flex items-center justify-between text-[11px] font-mono text-amber-300/90 border-t border-white/5">
                     <span>Total Seats Reserved:</span>
-                    <span className="font-bold">{1 + otherMembers.length} {1 + otherMembers.length > 1 ? 'Members Pass' : 'Solo Pass'}</span>
+                    <span className="font-bold">{seatCount} {seatCount > 1 ? 'Members Pass' : 'Solo Pass'}</span>
                   </div>
                 </div>
 
