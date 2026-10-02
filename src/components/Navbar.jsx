@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Music2, Ticket, Sparkles, Menu, X, Radio, ArrowRight, QrCode } from 'lucide-react';
+import { Music2, Ticket, Sparkles, Menu, X, Radio, ArrowRight, QrCode, MessageSquare, ShieldCheck } from 'lucide-react';
 
-export default function Navbar({ onRSVPClick, onOpenAdmin }) {
+export default function Navbar({ onRSVPClick, onOpenAdmin, onOpenChat }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -17,7 +17,6 @@ export default function Navbar({ onRSVPClick, onOpenAdmin }) {
   const navLinks = [
     { label: 'The Event', href: '#jam-junction' },
     { label: 'Jam Pad', href: '#jam-pad' },
-    { label: 'Jam Lounge', href: '#community-chat' },
     { label: 'Visual Diary', href: '#gallery' },
     { label: 'Team Members', href: '#team-members' },
     { label: 'FAQ', href: '#faq' },
@@ -97,8 +96,24 @@ export default function Navbar({ onRSVPClick, onOpenAdmin }) {
             )}
           </nav>
 
-          {/* Action Button: Balanced Proportional "Book Tickets" Button with clear spacing */}
-          <div className="flex items-center gap-3 ml-4 sm:ml-6 lg:ml-8 shrink-0">
+          {/* Action Button Group: Anonymous Chat + Balanced Proportional Book Tickets */}
+          <div className="flex items-center gap-2.5 sm:gap-3 ml-4 sm:ml-6 lg:ml-8 shrink-0">
+            {/* Anonymous Messaging Trigger Button with 4+ badge */}
+            <button
+              onClick={onOpenChat}
+              className="relative p-2 sm:p-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-violet-400/30 text-amber-300 hover:text-white transition-all transform active:scale-95 shadow-md shadow-violet-900/30 flex items-center justify-center group"
+              title="Connect, Create, Resonate (Anonymous Community Chat)"
+              aria-label="Open Anonymous Community Chat (4+ new messages)"
+            >
+              <MessageSquare className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-amber-400 group-hover:scale-110 transition-transform" />
+              
+              {/* Glowing 4+ Notification Badge */}
+              <span className="absolute -top-1.5 -right-2 px-1.5 py-0.5 bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 text-white text-[10px] font-black rounded-full shadow-[0_2px_8px_rgba(244,63,94,0.6)] border border-white/40 animate-pulse flex items-center justify-center min-w-[20px] leading-none">
+                4+
+              </span>
+            </button>
+
+            {/* Book Tickets Button */}
             <button 
               onClick={onRSVPClick}
               className="relative group overflow-hidden px-4 py-2 sm:px-4.5 sm:py-2 rounded-full font-bold text-white text-xs sm:text-sm tracking-wide transition-all transform active:scale-95 animate-ticket-flash bg-gradient-to-r from-violet-600 via-pink-600 to-amber-500 hover:opacity-95 shadow-md shadow-violet-600/20"
@@ -147,6 +162,23 @@ export default function Navbar({ onRSVPClick, onOpenAdmin }) {
                 <ArrowRight className="w-4 h-4 text-gray-500" />
               </a>
             ))}
+
+            {/* Mobile Chat Button */}
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onOpenChat();
+              }}
+              className="w-full py-2.5 px-4 rounded-xl text-sm font-semibold text-amber-300 bg-amber-500/10 border border-amber-500/30 flex items-center justify-between hover:bg-amber-500/20 transition-colors"
+            >
+              <span className="flex items-center gap-2">
+                <MessageSquare className="w-4 h-4 text-amber-400" />
+                <span>Connect, Create, Resonate</span>
+              </span>
+              <span className="text-[11px] bg-gradient-to-r from-pink-500 to-rose-500 text-white font-extrabold px-2 py-0.5 rounded-full shadow animate-pulse">
+                4+ msgs
+              </span>
+            </button>
 
             <a
               href="https://www.instagram.com/reson.at"

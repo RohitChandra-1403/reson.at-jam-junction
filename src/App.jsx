@@ -19,6 +19,7 @@ function App() {
   const [isRSVPModalOpen, setIsRSVPModalOpen] = useState(false);
   const [isVerifierOpen, setIsVerifierOpen] = useState(false);
   const [isAdminPanelOpen, setIsAdminPanelOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [verifierTxnId, setVerifierTxnId] = useState('');
   const [verifierPayload, setVerifierPayload] = useState('');
 
@@ -62,13 +63,13 @@ function App() {
       <Navbar 
         onRSVPClick={() => setIsRSVPModalOpen(true)} 
         onOpenAdmin={() => setIsAdminPanelOpen(true)}
+        onOpenChat={() => setIsChatOpen(true)}
       />
       <ScrollGuitarAnimation />
       <main>
         <Hero onRSVPClick={() => setIsRSVPModalOpen(true)} />
         <JamJunctionEvent />
         <VirtualJamPad />
-        <AnonymousChat />
         <CommunityGallery />
         <TeamMembers />
         <FAQ />
@@ -125,6 +126,11 @@ function App() {
           initialPayload={verifierPayload}
           onClose={handleCloseVerifier}
         />
+      )}
+
+      {/* Anonymous Community Chat Dialog ("Connect, Create, Resonate") */}
+      {isChatOpen && (
+        <AnonymousChat onClose={() => setIsChatOpen(false)} />
       )}
     </div>
   );
