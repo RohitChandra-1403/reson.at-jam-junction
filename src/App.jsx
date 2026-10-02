@@ -37,6 +37,14 @@ function App() {
     } catch (err) {
       console.error('Error parsing verification query params:', err);
     }
+
+    // Ensure page refresh always starts cleanly at the top if no hash link
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    if (!window.location.hash) {
+      window.scrollTo(0, 0);
+    }
   }, []);
 
   const handleCloseVerifier = () => {

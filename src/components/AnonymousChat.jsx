@@ -33,9 +33,6 @@ export default function AnonymousChat() {
   const [onlineCount, setOnlineCount] = useState(38);
   const [soundEnabled, setSoundEnabled] = useState(true);
 
-  const messagesEndRef = useRef(null);
-  const audioCtxRef = useRef(null);
-
   // Initialize identity and load messages
   useEffect(() => {
     // Check or generate identity
@@ -64,13 +61,29 @@ export default function AnonymousChat() {
     return () => clearInterval(interval);
   }, []);
 
-  // Auto scroll to bottom
+  const chatContainerRef = useRef(null);
+  const audioCtxRef = useRef(null);
+  const isInitialMount = useRef(true);
+
+  // Auto scroll ONLY the internal chat container, never window
   const scrollToBottom = (smooth = true) => {
-    messagesEndRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' });
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: smooth ? 'smooth' : 'auto'
+      });
+    }
   };
 
   useEffect(() => {
-    scrollToBottom(false);
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      if (chatContainerRef.current) {
+        chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      }
+      return;
+    }
+    scrollToBottom(true);
   }, [messages.length]);
 
   // Audio tone on message send
@@ -270,8 +283,8 @@ export default function AnonymousChat() {
             <span className="text-[10px] text-gray-400 font-mono hidden md:inline">Positive Vibe Policy</span>
           </div>
 
-          {/* Messages Stream */}
-          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+          {/* Messages Stream (Self-contained scroll, never affects window) */}
+          <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
             {messages.map((msg) => {
               const isMine = msg.isMe || (currentIdentity && msg.sender === currentIdentity.name);
 
@@ -331,7 +344,6 @@ export default function AnonymousChat() {
                 </div>
               );
             })}
-            <div ref={messagesEndRef} />
           </div>
 
           {/* Moderation Warning Toast Banner */}
