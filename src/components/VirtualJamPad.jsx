@@ -343,7 +343,7 @@ export default function VirtualJamPad() {
   };
 
   return (
-    <section id="jam-pad" className="py-24 relative overflow-hidden select-none border-t border-white/5 bg-dusk-900">
+    <section id="jam-pad" className="py-14 sm:py-24 relative overflow-hidden select-none border-t border-white/5 bg-dusk-900">
       
       {/* Background ambient lighting aura */}
       <div className="absolute inset-0 flex items-center justify-center opacity-30 pointer-events-none">
@@ -354,22 +354,22 @@ export default function VirtualJamPad() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header Section */}
-        <div className="text-center max-w-2xl mx-auto mb-12">
+        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-amber-400 text-xs font-bold tracking-wider uppercase mb-4 backdrop-blur-md">
             <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-spin-slow" />
             <span>Interactive Sound Studio</span>
           </div>
 
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight">
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-tight">
             Virtual <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-amber-300 to-sunset-500">Jam Lounge</span>
           </h2>
-          <p className="text-base sm:text-lg text-gray-300 mt-3 font-medium">
+          <p className="text-sm sm:text-lg text-gray-300 mt-2 sm:mt-3 font-medium">
             Tap acoustic chords, layer organic cajon beats, and discover your progression. Zero experience needed!
           </p>
         </div>
 
         {/* The Main Console Station */}
-        <div className="relative rounded-[32px] sm:rounded-[40px] bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/15 p-6 sm:p-10 md:p-12 shadow-[0_30px_90px_rgba(0,0,0,0.6)] backdrop-blur-2xl">
+        <div className="relative rounded-2xl sm:rounded-[40px] bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/15 p-4 sm:p-10 md:p-12 shadow-[0_30px_90px_rgba(0,0,0,0.6)] backdrop-blur-2xl">
           
           {/* Top Control Bar: Instrument Mode & Strum Type & Visualizer */}
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-white/10">
@@ -470,7 +470,7 @@ export default function VirtualJamPad() {
           </div>
 
           {/* 6 Luminous Interactive MPC Chord Trigger Pads */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 my-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6 my-5 sm:my-8">
             {CHORDS.map((chord) => {
               const isActive = activeChord === chord.name;
 
@@ -478,7 +478,7 @@ export default function VirtualJamPad() {
                 <button
                   key={chord.name}
                   onClick={() => playAcousticChord(chord.freqs, chord.name)}
-                  className={`group relative p-6 sm:p-7 rounded-2xl sm:rounded-3xl border transition-all duration-200 transform active:scale-95 text-left flex flex-col justify-between overflow-hidden shadow-xl ${
+                  className={`group relative p-3.5 sm:p-7 rounded-xl sm:rounded-3xl border transition-all duration-200 transform active:scale-95 text-left flex flex-col justify-between overflow-hidden shadow-xl ${
                     isActive
                       ? `scale-105 border-white bg-gradient-to-br ${chord.color} shadow-2xl`
                       : `bg-white/[0.04] hover:bg-white/[0.08] border-white/10 ${chord.border}`
@@ -496,27 +496,27 @@ export default function VirtualJamPad() {
                   )}
 
                   {/* Top Bar on Pad: Key shortcut & voicing */}
-                  <div className="relative z-10 flex items-center justify-between w-full mb-3">
-                    <span className="text-[11px] font-bold text-gray-400 tracking-wide uppercase group-hover:text-gray-200">
+                  <div className="relative z-10 flex items-center justify-between w-full mb-2 sm:mb-3">
+                    <span className="text-[10px] sm:text-[11px] font-bold text-gray-400 tracking-wide uppercase group-hover:text-gray-200 truncate pr-1">
                       {chord.label}
                     </span>
-                    <span className="px-2 py-0.5 rounded-md bg-white/10 border border-white/15 text-[10px] font-mono text-gray-300 font-semibold group-hover:border-amber-400/50">
+                    <span className="hidden sm:inline-block px-2 py-0.5 rounded-md bg-white/10 border border-white/15 text-[10px] font-mono text-gray-300 font-semibold group-hover:border-amber-400/50 shrink-0">
                       Key [{chord.key}]
                     </span>
                   </div>
 
                   {/* Chord Big Display */}
-                  <div className="relative z-10 my-2">
-                    <h3 className="text-3xl sm:text-4xl font-black text-white tracking-tight flex items-baseline gap-2">
+                  <div className="relative z-10 my-1 sm:my-2">
+                    <h3 className="text-2xl sm:text-4xl font-black text-white tracking-tight flex items-baseline gap-1.5 sm:gap-2">
                       <span>{chord.name}</span>
-                      <span className="text-xs font-normal text-gray-400">
-                        {instrumentType === 'acoustic' ? '6-string' : 'poly'}
+                      <span className="text-[10px] sm:text-xs font-normal text-gray-400">
+                        {instrumentType === 'acoustic' ? '6-str' : 'poly'}
                       </span>
                     </h3>
                   </div>
 
                   {/* Bottom Pad Hint */}
-                  <div className="relative z-10 flex items-center justify-between mt-3 pt-3 border-t border-white/10 text-xs text-gray-400">
+                  <div className="relative z-10 flex items-center justify-between mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-white/10 text-[11px] sm:text-xs text-gray-400">
                     <span className="group-hover:text-amber-400 font-medium transition-colors flex items-center gap-1">
                       <span>Tap to Strum</span>
                     </span>
@@ -532,7 +532,7 @@ export default function VirtualJamPad() {
           </div>
 
           {/* Bottom Control Bar: Organic Beat Rhythm Station & Volume */}
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-6 pt-8 border-t border-white/10 bg-black/40 -mx-6 sm:-mx-10 md:-mx-12 -mb-6 sm:-mb-10 md:-mb-12 p-6 sm:p-8 rounded-b-[32px] sm:rounded-b-[40px]">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-6 pt-6 sm:pt-8 border-t border-white/10 bg-black/40 -mx-4 sm:-mx-10 md:-mx-12 -mb-4 sm:-mb-10 md:-mb-12 p-4 sm:p-8 rounded-b-2xl sm:rounded-b-[40px]">
             
             {/* Beat Selector & Play Button */}
             <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">

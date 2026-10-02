@@ -28,7 +28,7 @@ export default function FAQ() {
   ];
 
   return (
-    <section id="faq" className="py-24 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative select-none">
+    <section id="faq" className="py-14 sm:py-24 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative select-none">
       
       {/* Background glow */}
       <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
@@ -38,22 +38,22 @@ export default function FAQ() {
       <div className="relative z-10">
         
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-10 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-amber-400 text-xs font-bold tracking-widest uppercase mb-4 backdrop-blur-md">
             <Music2 className="w-3.5 h-3.5 text-amber-400" />
             <span>Musician & Jammer Intel</span>
           </div>
 
-          <h2 className="text-4xl sm:text-5xl font-black text-white tracking-tight">
+          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
             Backstage <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-pink-400 to-violet-400">FAQ</span>
           </h2>
-          <p className="text-sm sm:text-base text-gray-400 mt-2 font-medium">
+          <p className="text-xs sm:text-base text-gray-400 mt-2 font-medium">
             Everything you need to know before stepping onto the jam floor.
           </p>
         </div>
 
         {/* Music-Styled Accordion Cards with Guitar Pick Toggle */}
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {faqs.map((faq, idx) => {
             const isOpen = openIdx === idx;
 
@@ -68,25 +68,25 @@ export default function FAQ() {
               >
                 <button
                   onClick={() => setOpenIdx(isOpen ? -1 : idx)}
-                  className="w-full p-6 text-left flex items-center justify-between gap-4 transition-colors"
+                  className="w-full p-4 sm:p-6 text-left flex items-center justify-between gap-3 sm:gap-4 transition-colors"
                   aria-expanded={isOpen}
                 >
-                  <div className="flex items-center gap-3.5">
+                  <div className="flex items-center gap-3 sm:gap-3.5">
                     {/* Guitar Pick Icon Indicator */}
-                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-transform ${
+                    <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shrink-0 transition-transform ${
                       isOpen ? 'bg-amber-400 text-black rotate-12 scale-110 shadow-md shadow-amber-400/30' : 'bg-white/10 text-gray-400'
                     }`}>
                       <span className="text-xs font-black">🎸</span>
                     </div>
 
-                    <h3 className={`text-base sm:text-lg font-black tracking-tight transition-colors ${
+                    <h3 className={`text-sm sm:text-lg font-black tracking-tight transition-colors ${
                       isOpen ? 'text-white' : 'text-gray-200 hover:text-white'
                     }`}>
                       {faq.q}
                     </h3>
                   </div>
 
-                  <div className={`w-8 h-8 rounded-full border border-white/10 flex items-center justify-center shrink-0 transition-transform duration-300 ${
+                  <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-white/10 flex items-center justify-center shrink-0 transition-transform duration-300 ${
                     isOpen ? 'rotate-180 bg-violet-600/30 text-violet-300 border-violet-500/40' : 'text-gray-400'
                   }`}>
                     <ChevronDown className="w-4 h-4" />
@@ -94,8 +94,8 @@ export default function FAQ() {
                 </button>
 
                 {isOpen && (
-                  <div className="px-6 pb-6 pt-1 text-sm text-gray-300 leading-relaxed border-t border-white/5 animate-in fade-in duration-200">
-                    <p className="pl-11">{faq.a}</p>
+                  <div className="px-4 pb-4 sm:px-6 sm:pb-6 pt-1 text-xs sm:text-sm text-gray-300 leading-relaxed border-t border-white/5 animate-in fade-in duration-200">
+                    <p className="pl-0 sm:pl-11">{faq.a}</p>
                   </div>
                 )}
               </div>

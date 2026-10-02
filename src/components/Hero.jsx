@@ -4,7 +4,7 @@ import heroCommunityImg from '../assets/hero-reson-jam.jpg';
 
 export default function Hero({ onRSVPClick }) {
   return (
-    <section className="relative overflow-hidden pt-10 sm:pt-14 pb-20 md:pb-28 select-none">
+    <section className="relative overflow-hidden pt-6 sm:pt-14 pb-14 md:pb-28 select-none">
       {/* Background ambient visualizer glow */}
       <div className="absolute inset-0 flex items-center justify-center opacity-30 pointer-events-none">
         <div className="w-[750px] h-[750px] bg-violet-600/40 rounded-full blur-[150px] animate-pulse-slow"></div>
@@ -14,37 +14,37 @@ export default function Hero({ onRSVPClick }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Main Hero Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center">
           
           {/* Left Column: Headline & Action */}
           <div className="lg:col-span-6 text-left">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/30 text-amber-400 mb-6 backdrop-blur-md shadow-inner">
-              <span className="relative flex h-2.5 w-2.5">
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-violet-500/10 border border-violet-500/30 text-amber-400 mb-4 sm:mb-6 backdrop-blur-md shadow-inner">
+              <span className="relative flex h-2 sm:h-2.5 w-2 sm:w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+                <span className="relative inline-flex rounded-full h-2 sm:h-2.5 w-2 sm:w-2.5 bg-amber-500"></span>
               </span>
-              <span className="text-xs sm:text-sm font-semibold tracking-wider uppercase font-mono">
+              <span className="text-[11px] sm:text-sm font-semibold tracking-wider uppercase font-mono">
                 Next Session: This Weekend • Bangalore
               </span>
             </div>
             
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black mb-6 tracking-tight leading-[1.08] text-white">
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black mb-4 sm:mb-6 tracking-tight leading-[1.08] text-white">
               Where Music <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-amber-300 to-sunset-500">
                 Resonates.
               </span>
             </h1>
             
-            <p className="text-lg sm:text-xl text-gray-300 mb-8 max-w-xl leading-relaxed font-normal">
+            <p className="text-base sm:text-xl text-gray-300 mb-6 sm:mb-8 max-w-xl leading-relaxed font-normal">
               Step into <strong>Jam Junction</strong> by <strong>reson.at</strong> — Bangalore’s soulful unplugged jam sanctuary. 
               Bring your guitar, cajon, voice, or simply pull up a chair. No stage, no rehearsals, zero pressure.
             </p>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-10">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 mb-8 sm:mb-10">
               <a 
                 href="#jam-junction"
-                className="px-8 py-4 bg-white/10 hover:bg-white/20 text-white border border-white/25 hover:border-white/40 rounded-full font-bold text-lg transition-all backdrop-blur-md shadow-lg shadow-black/30 flex items-center justify-center gap-2.5 transform hover:-translate-y-0.5 active:scale-95"
+                className="px-6 py-3.5 sm:px-8 sm:py-4 bg-white/10 hover:bg-white/20 text-white border border-white/25 hover:border-white/40 rounded-full font-bold text-base sm:text-lg transition-all backdrop-blur-md shadow-lg shadow-black/30 flex items-center justify-center gap-2.5 transform hover:-translate-y-0.5 active:scale-95"
                 style={{ color: '#FFFFFF' }}
               >
                 <Users className="w-5 h-5 text-white" />
@@ -54,7 +54,7 @@ export default function Hero({ onRSVPClick }) {
               
               <a 
                 href="#jam-pad"
-                className="px-7 py-4 bg-white/5 hover:bg-white/10 text-white border border-white/15 hover:border-violet-400/40 rounded-full font-semibold text-lg transition-all backdrop-blur-sm flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-white/5 active:scale-95"
+                className="px-6 py-3.5 sm:px-7 sm:py-4 bg-white/5 hover:bg-white/10 text-white border border-white/15 hover:border-violet-400/40 rounded-full font-semibold text-base sm:text-lg transition-all backdrop-blur-sm flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-white/5 active:scale-95"
               >
                 <Music className="w-5 h-5 text-amber-400" />
                 <span>Try Jam Lounge</span>
@@ -62,18 +62,18 @@ export default function Hero({ onRSVPClick }) {
             </div>
 
             {/* Quick Community Highlights */}
-            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-white/10">
+            <div className="grid grid-cols-3 gap-2 sm:gap-4 pt-5 sm:pt-6 border-t border-white/10">
               <div>
-                <div className="text-2xl sm:text-3xl font-extrabold text-white">50+</div>
-                <div className="text-xs sm:text-sm text-gray-400 mt-0.5 font-medium">Jammers / Circle</div>
+                <div className="text-xl sm:text-3xl font-extrabold text-white">50+</div>
+                <div className="text-[11px] sm:text-sm text-gray-400 mt-0.5 font-medium">Jammers / Circle</div>
               </div>
               <div>
-                <div className="text-2xl sm:text-3xl font-extrabold text-amber-400">100%</div>
-                <div className="text-xs sm:text-sm text-gray-400 mt-0.5 font-medium">Unplugged Soul</div>
+                <div className="text-xl sm:text-3xl font-extrabold text-amber-400">100%</div>
+                <div className="text-[11px] sm:text-sm text-gray-400 mt-0.5 font-medium">Unplugged Soul</div>
               </div>
               <div>
-                <div className="text-2xl sm:text-3xl font-extrabold text-violet-400">0%</div>
-                <div className="text-xs sm:text-sm text-gray-400 mt-0.5 font-medium">Stage Fright</div>
+                <div className="text-xl sm:text-3xl font-extrabold text-violet-400">0%</div>
+                <div className="text-[11px] sm:text-sm text-gray-400 mt-0.5 font-medium">Stage Fright</div>
               </div>
             </div>
 

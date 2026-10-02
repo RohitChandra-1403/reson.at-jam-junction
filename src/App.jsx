@@ -77,26 +77,28 @@ function App() {
       <Footer onOpenAdmin={() => setIsAdminPanelOpen(true)} />
 
       {/* Floating Admin Controls Quick Dock (Bottom-Left) */}
-      <div className="fixed bottom-6 left-6 z-40 flex items-center gap-2">
+      <div className="fixed bottom-3.5 left-3.5 sm:bottom-6 sm:left-6 z-40 flex items-center gap-1.5 sm:gap-2">
         {/* Admin Dashboard Button */}
         <button
           onClick={() => setIsAdminPanelOpen(true)}
-          className="px-4 py-2.5 rounded-full bg-dusk-900/90 hover:bg-violet-950/90 border border-violet-500/40 text-violet-300 hover:text-white text-xs font-bold shadow-[0_8px_25px_rgba(139,92,246,0.3)] backdrop-blur-md transition-all flex items-center gap-2 group hover:scale-105"
+          className="p-2 sm:px-4 sm:py-2.5 rounded-full bg-dusk-900/90 hover:bg-violet-950/90 border border-violet-500/40 text-violet-300 hover:text-white text-xs font-bold shadow-[0_8px_25px_rgba(139,92,246,0.3)] backdrop-blur-md transition-all flex items-center gap-2 group hover:scale-105"
           title="Open Admin Registration Tracker Dashboard"
+          aria-label="Open Admin Panel"
         >
           <span className="p-1 rounded-full bg-violet-500/20 group-hover:bg-violet-500/40 text-violet-300">
             <LayoutDashboard className="w-3.5 h-3.5" />
           </span>
-          <span>Admin Panel</span>
+          <span className="hidden sm:inline">Admin Panel</span>
         </button>
 
         {/* Quick QR Scanner Button */}
         <button
           onClick={() => setIsVerifierOpen(true)}
-          className="p-2.5 rounded-full bg-dusk-900/90 hover:bg-emerald-950/90 border border-emerald-500/40 text-emerald-400 hover:text-emerald-300 shadow-[0_8px_25px_rgba(16,185,129,0.3)] backdrop-blur-md transition-all hover:scale-105"
+          className="p-2 sm:p-2.5 rounded-full bg-dusk-900/90 hover:bg-emerald-950/90 border border-emerald-500/40 text-emerald-400 hover:text-emerald-300 shadow-[0_8px_25px_rgba(16,185,129,0.3)] backdrop-blur-md transition-all hover:scale-105"
           title="Open Gate QR Camera Scanner"
+          aria-label="Open QR Scanner"
         >
-          <QrCode className="w-4 h-4" />
+          <QrCode className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         </button>
       </div>
 

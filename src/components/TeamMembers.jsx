@@ -220,7 +220,7 @@ export default function TeamMembers() {
     <section 
       id="team-members" 
       ref={sectionRef} 
-      className="py-24 bg-dusk-900 relative overflow-visible select-none border-t border-white/5"
+      className="py-14 sm:py-24 bg-dusk-900 relative overflow-visible select-none border-t border-white/5"
     >
       {/* Background ambient lighting */}
       <div className="absolute inset-0 flex items-center justify-center opacity-25 pointer-events-none">
@@ -231,23 +231,23 @@ export default function TeamMembers() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16">
+        <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-amber-400 text-xs font-bold tracking-widest uppercase mb-4 backdrop-blur-md">
             <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-spin-slow" />
             <span>The Humans Behind The Music</span>
           </div>
 
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight">
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-tight">
             Meet The <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-amber-300 to-sunset-500">Core Crew</span>
           </h2>
-          <p className="text-base sm:text-lg text-gray-300 mt-3 font-medium">
+          <p className="text-sm sm:text-lg text-gray-300 mt-2 sm:mt-3 font-medium">
             Musicians, curators, and soul-seekers dedicated to making every Jam Junction unforgettable.
           </p>
         </div>
 
         {/* 3D Perspective Grid with Zero-Latency GPU Pop Out */}
         <div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 py-4"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-8 py-2 sm:py-4"
           style={{ perspective: '1000px' }}
         >
           {TEAM.map((member, idx) => (
@@ -257,7 +257,7 @@ export default function TeamMembers() {
               onMouseEnter={() => handleMouseEnter(idx)}
               onMouseLeave={handleMouseLeave}
               onClick={() => handleCardClick(idx)}
-              className="group relative rounded-[28px] overflow-hidden bg-gradient-to-b from-white/[0.09] to-white/[0.03] border border-white/15 hover:border-violet-400/80 p-5 shadow-2xl hover:shadow-[0_25px_60px_rgba(139,92,246,0.45)] cursor-pointer flex flex-col justify-between will-change-transform"
+              className="group relative rounded-2xl sm:rounded-[28px] overflow-hidden bg-gradient-to-b from-white/[0.09] to-white/[0.03] border border-white/15 hover:border-violet-400/80 p-4 sm:p-5 shadow-2xl hover:shadow-[0_25px_60px_rgba(139,92,246,0.45)] cursor-pointer flex flex-col justify-between will-change-transform"
               style={{
                 transform: 'translate3d(0, 0, 0)',
               }}

@@ -9,6 +9,7 @@ export default function ScrollGuitarAnimation() {
   const railRef = useRef(null);
   const guitarSliderRef = useRef(null);
   const progressBeamRef = useRef(null);
+  const mobileProgressBeamRef = useRef(null);
   const percentTextRef = useRef(null);
 
   const lastScrollY = useRef(0);
@@ -94,9 +95,12 @@ export default function ScrollGuitarAnimation() {
         guitarSliderRef.current.style.transform = `translate3d(-50%, ${translateY}px, 0) rotate(${tilt}deg)`;
       }
 
-      // Direct update to progress bar height
+      // Direct update to progress bar height (desktop) & width (mobile)
       if (progressBeamRef.current) {
         progressBeamRef.current.style.height = `${progress * 100}%`;
+      }
+      if (mobileProgressBeamRef.current) {
+        mobileProgressBeamRef.current.style.width = `${progress * 100}%`;
       }
 
       // Direct update to percentage text
@@ -161,15 +165,29 @@ export default function ScrollGuitarAnimation() {
   };
 
   return (
-    <aside 
-      className="fixed right-3 md:right-8 top-20 bottom-16 z-40 flex items-center pointer-events-none select-none will-change-transform"
-      aria-label="Guitar Scroll Indicator"
-    >
-      {/* Vertical Fretboard Rail (Scroll Track) */}
+    <>
+      {/* Mobile-Only Minimalist Top Progress Beam (Zero Clutter on Phones!) */}
       <div 
-        ref={railRef} 
-        className="relative h-[78vh] w-12 md:w-16 flex flex-col items-center justify-between"
+        className="md:hidden fixed top-0 left-0 right-0 z-50 h-[3px] bg-white/10 pointer-events-none"
+        aria-hidden="true"
       >
+        <div 
+          ref={mobileProgressBeamRef}
+          className="h-full bg-gradient-to-r from-amber-400 via-pink-500 to-violet-500 shadow-[0_0_8px_#f59e0b]"
+          style={{ width: '0%' }}
+        />
+      </div>
+
+      {/* Desktop / Tablet Vertical Fretboard Rail (Hidden on small mobile screens to prevent clutter) */}
+      <aside 
+        className="hidden md:flex fixed right-3 lg:right-8 top-20 bottom-16 z-40 items-center pointer-events-none select-none will-change-transform"
+        aria-label="Guitar Scroll Indicator"
+      >
+        {/* Vertical Fretboard Rail (Scroll Track) */}
+        <div 
+          ref={railRef} 
+          className="relative h-[78vh] w-12 md:w-16 flex flex-col items-center justify-between"
+        >
         
         {/* Fretboard background beam with string lines */}
         <div className="absolute inset-y-0 w-2 md:w-2.5 bg-gradient-to-b from-amber-500/20 via-violet-600/30 to-amber-500/20 rounded-full backdrop-blur-md border border-white/10 shadow-[0_0_15px_rgba(139,92,246,0.25)]">
@@ -353,5 +371,6 @@ export default function ScrollGuitarAnimation() {
 
       </div>
     </aside>
+    </>
   );
 }

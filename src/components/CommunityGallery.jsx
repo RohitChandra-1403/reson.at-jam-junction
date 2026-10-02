@@ -154,7 +154,7 @@ export default function CommunityGallery() {
   };
 
   return (
-    <section id="gallery" className="py-24 bg-dusk-900 relative overflow-hidden select-none border-t border-white/5">
+    <section id="gallery" className="py-14 sm:py-24 bg-dusk-900 relative overflow-hidden select-none border-t border-white/5">
       
       {/* Background ambient lighting */}
       <div className="absolute inset-0 flex items-center justify-center opacity-25 pointer-events-none">
@@ -165,26 +165,26 @@ export default function CommunityGallery() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header Block seamlessly on dark background */}
-        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
-          <span className="inline-block text-xs font-extrabold tracking-[0.25em] text-violet-400 uppercase mb-3">
+        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
+          <span className="inline-block text-[11px] sm:text-xs font-extrabold tracking-[0.25em] text-violet-400 uppercase mb-2 sm:mb-3">
             GALLERY
           </span>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight">
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-tight">
             My Visual <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-amber-300 to-sunset-500">Diary</span>
           </h2>
-          <p className="text-base sm:text-lg text-gray-400 mt-3 font-medium max-w-xl mx-auto">
+          <p className="text-sm sm:text-lg text-gray-400 mt-2 sm:mt-3 font-medium max-w-xl mx-auto">
             See the world through our lens: adventures, soulful chords, and moments in photos and videos
           </p>
 
-          {/* Filter Pills with Dark Glass Styling */}
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 mt-8">
+          {/* Filter Pills with Horizontal Scroll on Mobile (Zero Clutter) */}
+          <div className="flex items-center overflow-x-auto no-scrollbar gap-2 sm:gap-2.5 mt-6 sm:mt-8 px-1 sm:px-0 sm:flex-wrap sm:justify-center py-1">
             {CATEGORIES.map((cat) => {
               const isActive = selectedCategory === cat;
               return (
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 ${
+                  className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 whitespace-nowrap shrink-0 ${
                     isActive
                       ? 'bg-gradient-to-r from-violet-600 to-violet-500 text-white shadow-lg shadow-violet-600/35 border border-violet-400/50 scale-105'
                       : 'bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white border border-white/10 backdrop-blur-md'
@@ -199,7 +199,7 @@ export default function CommunityGallery() {
               href="https://www.instagram.com/reson.at"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-4 py-2 rounded-full text-xs sm:text-sm font-semibold text-gray-300 bg-white/5 border border-white/15 hover:border-violet-400 hover:text-white transition-all flex items-center gap-1.5 backdrop-blur-md"
+              className="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold text-gray-300 bg-white/5 border border-white/15 hover:border-violet-400 hover:text-white transition-all flex items-center gap-1.5 backdrop-blur-md whitespace-nowrap shrink-0"
             >
               <span>View More</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -210,7 +210,7 @@ export default function CommunityGallery() {
         {/* 3D Coverflow Carousel Container with Touch & Drag (No White Box!) */}
         <div 
           ref={containerRef}
-          className="relative h-[400px] sm:h-[460px] md:h-[500px] w-full flex items-center justify-center overflow-visible cursor-grab active:cursor-grabbing touch-pan-y my-2"
+          className="relative h-[370px] sm:h-[460px] md:h-[500px] w-full flex items-center justify-center overflow-hidden cursor-grab active:cursor-grabbing touch-pan-y my-2"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
@@ -273,7 +273,9 @@ export default function CommunityGallery() {
               <div
                 key={item.id}
                 onClick={() => !isActive && setActiveIndex(idx)}
-                className={`absolute top-1/2 left-1/2 w-[230px] sm:w-[290px] md:w-[330px] aspect-[4/5] rounded-[26px] sm:rounded-[34px] overflow-hidden select-none cursor-pointer transition-all ${
+                className={`absolute top-1/2 left-1/2 w-[220px] sm:w-[290px] md:w-[330px] aspect-[4/5] rounded-[24px] sm:rounded-[34px] overflow-hidden select-none cursor-pointer transition-all ${
+                  (isFarPrev || isFarNext) ? 'hidden sm:block' : ''
+                } ${
                   isDragging ? 'duration-75' : 'duration-500 ease-out'
                 } ${
                   isActive 

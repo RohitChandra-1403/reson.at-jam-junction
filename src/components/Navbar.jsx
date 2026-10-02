@@ -97,18 +97,18 @@ export default function Navbar({ onRSVPClick, onOpenAdmin, onOpenChat }) {
           </nav>
 
           {/* Action Button Group: Anonymous Chat + Balanced Proportional Book Tickets */}
-          <div className="flex items-center gap-3.5 sm:gap-5 ml-4 sm:ml-6 lg:ml-8 shrink-0">
-            {/* Anonymous Messaging Trigger Button with 4+ badge (Enlarged & comfortably spaced) */}
+          <div className="flex items-center gap-2.5 sm:gap-5 ml-auto sm:ml-6 lg:ml-8 shrink-0">
+            {/* Anonymous Messaging Trigger Button with 4+ badge */}
             <button
               onClick={onOpenChat}
-              className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/10 hover:bg-white/15 border-2 border-violet-400/40 hover:border-amber-400/60 text-amber-300 hover:text-white transition-all transform hover:scale-105 active:scale-95 shadow-[0_4px_16px_rgba(139,92,246,0.3)] flex items-center justify-center group"
+              className="relative w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white/10 hover:bg-white/15 border-2 border-violet-400/40 hover:border-amber-400/60 text-amber-300 hover:text-white transition-all transform hover:scale-105 active:scale-95 shadow-[0_4px_16px_rgba(139,92,246,0.3)] flex items-center justify-center group"
               title="Connect, Create, Resonate (Anonymous Community Chat)"
               aria-label="Open Anonymous Community Chat (4+ new messages)"
             >
-              <MessageSquare className="w-5 h-5 sm:w-5.5 sm:h-5.5 text-amber-400 group-hover:text-amber-300 group-hover:scale-110 transition-transform" />
+              <MessageSquare className="w-4.5 h-4.5 sm:w-5.5 sm:h-5.5 text-amber-400 group-hover:text-amber-300 group-hover:scale-110 transition-transform" />
               
               {/* Glowing 4+ Notification Badge */}
-              <span className="absolute -top-1.5 -right-2 px-1.5 py-0.5 bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 text-white text-[10px] sm:text-[11px] font-black rounded-full shadow-[0_2px_10px_rgba(244,63,94,0.7)] border border-white/50 animate-pulse flex items-center justify-center min-w-[22px] h-[19px] leading-none">
+              <span className="absolute -top-1 -right-1.5 sm:-top-1.5 sm:-right-2 px-1 sm:px-1.5 py-0.5 bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 text-white text-[9px] sm:text-[11px] font-black rounded-full shadow-[0_2px_10px_rgba(244,63,94,0.7)] border border-white/50 animate-pulse flex items-center justify-center min-w-[18px] sm:min-w-[22px] h-[16px] sm:h-[19px] leading-none">
                 4+
               </span>
             </button>
@@ -116,7 +116,7 @@ export default function Navbar({ onRSVPClick, onOpenAdmin, onOpenChat }) {
             {/* Book Tickets Button */}
             <button 
               onClick={onRSVPClick}
-              className="relative group overflow-hidden px-4 py-2 sm:px-4.5 sm:py-2 rounded-full font-bold text-white text-xs sm:text-sm tracking-wide transition-all transform active:scale-95 animate-ticket-flash bg-gradient-to-r from-violet-600 via-pink-600 to-amber-500 hover:opacity-95 shadow-md shadow-violet-600/20"
+              className="relative group overflow-hidden px-3 sm:px-4.5 py-1.5 sm:py-2 rounded-full font-bold text-white text-xs sm:text-sm tracking-wide transition-all transform active:scale-95 animate-ticket-flash bg-gradient-to-r from-violet-600 via-pink-600 to-amber-500 hover:opacity-95 shadow-md shadow-violet-600/20"
               style={{
                 color: '#FFFFFF', // Guaranteed pure white font
               }}
@@ -126,7 +126,7 @@ export default function Navbar({ onRSVPClick, onOpenAdmin, onOpenChat }) {
               <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-[-25deg] pointer-events-none animate-shimmer-sweep" />
 
               {/* Button content */}
-              <span className="relative z-10 flex items-center gap-1.5 font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+              <span className="relative z-10 flex items-center gap-1 sm:gap-1.5 font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
                 <Ticket className="w-3.5 h-3.5 text-white fill-white/20" />
                 <span>Book Tickets</span>
                 <span className="relative flex h-1.5 w-1.5 ml-0.5">
@@ -139,7 +139,7 @@ export default function Navbar({ onRSVPClick, onOpenAdmin, onOpenChat }) {
             {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-300 hover:text-white transition-colors"
+              className="md:hidden p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10 text-gray-300 hover:text-white transition-colors"
               aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5 text-white" />}
