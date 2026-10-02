@@ -526,7 +526,7 @@ export default function RSVPModal({ onClose, onOpenVerifier }) {
                 {/* Instagram Handle (Optional) */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1 flex items-center gap-1.5">
-                    <Instagram className="w-3.5 h-3.5 text-pink-400" />
+                    <InstagramIcon className="w-3.5 h-3.5 text-pink-400" />
                     <span>Instagram Handle <span className="text-gray-500 font-normal lowercase">(optional)</span></span>
                   </label>
                   <input 
