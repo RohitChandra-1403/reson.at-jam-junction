@@ -97,18 +97,18 @@ export default function Navbar({ onRSVPClick, onOpenAdmin, onOpenChat }) {
           </nav>
 
           {/* Action Button Group: Anonymous Chat + Balanced Proportional Book Tickets */}
-          <div className="flex items-center gap-2.5 sm:gap-3 ml-4 sm:ml-6 lg:ml-8 shrink-0">
-            {/* Anonymous Messaging Trigger Button with 4+ badge */}
+          <div className="flex items-center gap-3.5 sm:gap-5 ml-4 sm:ml-6 lg:ml-8 shrink-0">
+            {/* Anonymous Messaging Trigger Button with 4+ badge (Enlarged & comfortably spaced) */}
             <button
               onClick={onOpenChat}
-              className="relative p-2 sm:p-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-violet-400/30 text-amber-300 hover:text-white transition-all transform active:scale-95 shadow-md shadow-violet-900/30 flex items-center justify-center group"
+              className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/10 hover:bg-white/15 border-2 border-violet-400/40 hover:border-amber-400/60 text-amber-300 hover:text-white transition-all transform hover:scale-105 active:scale-95 shadow-[0_4px_16px_rgba(139,92,246,0.3)] flex items-center justify-center group"
               title="Connect, Create, Resonate (Anonymous Community Chat)"
               aria-label="Open Anonymous Community Chat (4+ new messages)"
             >
-              <MessageSquare className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-amber-400 group-hover:scale-110 transition-transform" />
+              <MessageSquare className="w-5 h-5 sm:w-5.5 sm:h-5.5 text-amber-400 group-hover:text-amber-300 group-hover:scale-110 transition-transform" />
               
               {/* Glowing 4+ Notification Badge */}
-              <span className="absolute -top-1.5 -right-2 px-1.5 py-0.5 bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 text-white text-[10px] font-black rounded-full shadow-[0_2px_8px_rgba(244,63,94,0.6)] border border-white/40 animate-pulse flex items-center justify-center min-w-[20px] leading-none">
+              <span className="absolute -top-1.5 -right-2 px-1.5 py-0.5 bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 text-white text-[10px] sm:text-[11px] font-black rounded-full shadow-[0_2px_10px_rgba(244,63,94,0.7)] border border-white/50 animate-pulse flex items-center justify-center min-w-[22px] h-[19px] leading-none">
                 4+
               </span>
             </button>
