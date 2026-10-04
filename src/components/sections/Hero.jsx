@@ -2,6 +2,7 @@ import React from 'react';
 import { Radio, ChevronRight, Sparkles, Music, Users, MapPin, Play, Ticket, Disc } from 'lucide-react';
 import heroCommunityImg from '@/assets/images/hero-reson-jam.jpg';
 import { RollingText } from '@/components/v1/skiper27';
+import { ParticleText } from '@/components/v1/ParticleText';
 
 export default function Hero({ onRSVPClick }) {
   return (
@@ -70,14 +71,27 @@ export default function Hero({ onRSVPClick }) {
             </div>
           </div>
 
-          {/* Glass Style Headline - Clean, Seamless Typography without any box lines */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.12] text-white drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)] mb-6">
-            Where{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-rose-300 to-violet-300 drop-shadow-[0_2px_20px_rgba(251,191,36,0.3)]">
-              Creativity
-            </span> <br />
-            Resonates.
-          </h1>
+          {/* Particle Animated Headline ("Where Creativity Resonates.") */}
+          <div className="flex flex-col items-start gap-1 sm:gap-2 mb-6">
+            <ParticleText 
+              text="Where"
+              particleColor="#fbbf24"
+              particleCount={30}
+              textClassName="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none text-white drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)]"
+            />
+            <ParticleText 
+              text="Creativity"
+              particleColor="#ec4899"
+              particleCount={45}
+              textClassName="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-rose-300 to-violet-300 drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)]"
+            />
+            <ParticleText 
+              text="Resonates."
+              particleColor="#a78bfa"
+              particleCount={35}
+              textClassName="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none text-white drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)]"
+            />
+          </div>
 
           {/* Premium Floating Glass Action Buttons */}
           <div className="flex flex-wrap items-center gap-3 sm:gap-4">
