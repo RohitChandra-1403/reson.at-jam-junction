@@ -1,5 +1,5 @@
 import React from 'react';
-import { Radio, ChevronRight, Sparkles, Music, Users, MapPin, Play, Ticket, Disc } from 'lucide-react';
+import { ChevronRight, Sparkles, Music, Ticket } from 'lucide-react';
 import heroCommunityImg from '@/assets/images/hero-reson-jam.jpg';
 import { RollingText } from '@/components/v1/skiper27';
 import { ParticleText } from '@/components/v1/ParticleText';
@@ -8,7 +8,7 @@ export default function Hero({ onRSVPClick }) {
   return (
     <section className="relative min-h-[90vh] sm:min-h-[94vh] flex flex-col justify-between overflow-hidden select-none">
       
-      {/* 1. Full-Bleed Main Community Photo Canvas */}
+      {/* 1. Main Community Photo Canvas with Dedicated Contrast Scrim */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <img 
           src={heroCommunityImg} 
@@ -16,90 +16,69 @@ export default function Hero({ onRSVPClick }) {
           className="w-full h-full object-cover object-[center_30%] filter brightness-[0.96] contrast-[1.05] saturate-[1.08] scale-[1.01] transition-transform duration-700"
         />
         
-        {/* Crisp, Targeted Scrims - Kept away from faces to keep photo bright and clear */}
-        {/* Top-down navbar contrast scrim */}
-        <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/80 via-black/35 to-transparent pointer-events-none" />
+        {/* Strong Left-to-Right Dark Gradient: Calms the background behind text for instant legibility */}
+        <div className="absolute inset-0 bg-gradient-to-r from-dusk-900/95 via-dusk-900/80 md:via-dusk-900/60 to-dusk-900/20 pointer-events-none" />
 
-        {/* Bottom transition into next section */}
+        {/* Top & Bottom Atmospheric Transitions */}
+        <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/80 via-black/30 to-transparent pointer-events-none" />
         <div className="absolute bottom-0 inset-x-0 h-44 bg-gradient-to-t from-dusk-900 via-dusk-900/70 to-transparent pointer-events-none" />
 
-        {/* Subtle radial concert glow accents */}
+        {/* Subtle Ambient Concert Lighting Glow */}
         <div className="absolute -top-16 right-10 w-96 h-96 bg-violet-600/20 rounded-full blur-[120px] pointer-events-none" />
       </div>
 
-      {/* 2. Top Banner Row: Live Status Beacon & Community Pill */}
-      <div className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 flex flex-wrap items-center justify-between gap-3">
-        {/* Live Jam Weekend Status Beacon */}
-        <div className="inline-flex items-center gap-2.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-black/70 border border-emerald-500/50 text-emerald-300 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.6)]">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-          </span>
-          <span className="text-[11px] sm:text-xs font-mono font-bold tracking-wider uppercase">
-            NEXT SESSION: THIS WEEKEND • BANGALORE
-          </span>
-        </div>
-
-        {/* Community Proof Pill */}
-        <div className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/70 border border-white/20 text-xs font-semibold text-gray-200 backdrop-blur-xl shadow-lg">
-          <Users className="w-3.5 h-3.5 text-amber-400" />
-          <span>Real Community Lounge • 50+ Jammers</span>
-        </div>
-      </div>
-
-      {/* 3. Hero Main Narrative: Floating Directly Over Photo with Pure Glass Styling (No enclosing box) */}
-      <div className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 my-auto py-8 sm:py-14">
-        <div className="max-w-3xl text-left">
+      {/* 2. Hero Content: Structured Visual Hierarchy with Generous Breathing Space */}
+      <div className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 my-auto py-12 sm:py-20 lg:py-24">
+        {/* Narrower text column to prevent clutter and focus attention */}
+        <div className="max-w-xl text-left">
           
-          {/* Skiper UI (Skiper27) Animated Rolling Text Glass Pill */}
-          <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/[0.08] border border-white/20 backdrop-blur-xl shadow-lg mb-4 sm:mb-5 group hover:border-amber-400/50 transition-all">
-            <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-amber-500 via-pink-500 to-violet-600 p-0.5 shrink-0 flex items-center justify-center">
-              <Sparkles className="w-3 h-3 text-white" />
-            </div>
-            <div className="flex items-center gap-1.5 overflow-hidden">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-amber-300 shrink-0">
-                MOTTO:
-              </span>
-              <RollingText 
-                text="Connect , Create and Resonate "
-                speed={0.04}
-                duration={0.6}
-                loop={true}
-                loopInterval={4000}
-                className="text-xs sm:text-sm font-bold font-display tracking-tight text-amber-200"
-              />
-            </div>
+          {/* Visual Hierarchy 1: Small Introductory Label */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.08] border border-white/15 backdrop-blur-md shadow-sm mb-6 group hover:border-amber-400/50 transition-all">
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <RollingText 
+              text="Connect , Create and Resonate"
+              speed={0.04}
+              duration={0.6}
+              loop={true}
+              loopInterval={4000}
+              className="text-xs font-bold font-display tracking-tight text-amber-200"
+            />
           </div>
 
-          {/* Particle Animated Headline ("Where Creativity Resonates.") */}
+          {/* Visual Hierarchy 2: Main Heading (ParticleText Animation) */}
           <div className="flex flex-col items-start gap-1 sm:gap-2 mb-6">
             <ParticleText 
               text="Where"
               particleColor="#fbbf24"
-              particleCount={30}
-              textClassName="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none text-white drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)]"
+              particleCount={25}
+              textClassName="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-none text-white drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)]"
             />
             <ParticleText 
               text="Creativity"
               particleColor="#ec4899"
-              particleCount={45}
-              textClassName="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-rose-300 to-violet-300 drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)]"
+              particleCount={40}
+              textClassName="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-none text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-rose-300 to-violet-300 drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)]"
             />
             <ParticleText 
               text="Resonates."
               particleColor="#a78bfa"
-              particleCount={35}
-              textClassName="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none text-white drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)]"
+              particleCount={30}
+              textClassName="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-none text-white drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)]"
             />
           </div>
 
-          {/* Premium Floating Glass Action Buttons */}
-          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+          {/* Visual Hierarchy 3: Short Supporting Description */}
+          <p className="text-base sm:text-lg text-zinc-300 leading-relaxed font-normal mb-8 max-w-lg drop-shadow-sm">
+            Bangalore's soulful unplugged jam sanctuary. Bring your guitar, cajon, voice, or simply pull up a chair. Zero pressure, pure acoustics.
+          </p>
+
+          {/* Visual Hierarchy 4 & 5: Primary CTA & Secondary CTA */}
+          <div className="flex flex-wrap items-center gap-4">
             
-            {/* Primary Action Button: Book Tickets */}
+            {/* Primary CTA: Book Tickets */}
             <button 
               onClick={onRSVPClick}
-              className="relative group overflow-hidden px-6 py-3.5 rounded-full font-bold text-white text-sm sm:text-base tracking-wide transition-all transform hover:scale-105 active:scale-95 shadow-[0_8px_30px_rgba(139,92,246,0.5)] bg-gradient-to-r from-violet-600 via-pink-600 to-amber-500 flex items-center justify-center gap-2.5 border border-white/30"
+              className="relative group overflow-hidden px-7 py-3.5 rounded-full font-bold text-white text-sm sm:text-base tracking-wide transition-all transform hover:scale-105 active:scale-95 shadow-[0_8px_30px_rgba(139,92,246,0.5)] bg-gradient-to-r from-violet-600 via-pink-600 to-amber-500 flex items-center justify-center gap-2.5 border border-white/30"
               style={{ color: '#FFFFFF' }}
             >
               {/* Sweeping Shimmer Beam */}
@@ -110,22 +89,13 @@ export default function Hero({ onRSVPClick }) {
               <ChevronRight className="w-4 h-4 text-white/80 group-hover:translate-x-1 transition-transform" />
             </button>
 
-            {/* Secondary Action: Virtual Jam Pad */}
+            {/* Secondary CTA: Try Jam Lounge */}
             <a 
               href="#jam-pad"
-              className="px-5 py-3.5 rounded-full bg-white/[0.08] hover:bg-white/[0.16] text-white border border-white/25 hover:border-violet-400/60 font-semibold text-sm sm:text-base transition-all backdrop-blur-xl flex items-center justify-center gap-2 shadow-lg hover:shadow-violet-600/20 active:scale-95"
+              className="px-6 py-3.5 rounded-full bg-white/[0.08] hover:bg-white/[0.16] text-white border border-white/20 hover:border-violet-400/50 font-semibold text-sm sm:text-base transition-all backdrop-blur-xl flex items-center justify-center gap-2 shadow-lg hover:shadow-violet-600/20 active:scale-95"
             >
               <Music className="w-4 h-4 text-amber-400" />
               <span>Try Jam Lounge</span>
-            </a>
-
-            {/* Tertiary Action: Visual Diary */}
-            <a 
-              href="#gallery"
-              className="px-5 py-3.5 rounded-full bg-black/40 hover:bg-black/60 text-gray-200 hover:text-white border border-white/15 hover:border-white/30 font-semibold text-xs sm:text-sm transition-all backdrop-blur-xl flex items-center justify-center gap-1.5 active:scale-95"
-            >
-              <span>Visual Diary</span>
-              <ChevronRight className="w-3.5 h-3.5 text-violet-400" />
             </a>
 
           </div>
@@ -133,11 +103,11 @@ export default function Hero({ onRSVPClick }) {
         </div>
       </div>
 
-      {/* 4. Bottom Floating Stats & Live Equalizer Dock - Classy Luxury Glass Dock */}
+      {/* 3. Bottom Floating Stats & Live Equalizer Dock - Classy Luxury Glass Dock */}
       <div className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12">
         <div className="px-6 py-4 sm:px-8 sm:py-5 rounded-2xl sm:rounded-full bg-gradient-to-r from-black/50 via-black/35 to-black/50 backdrop-blur-2xl border border-white/15 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.22),0_15px_45px_rgba(0,0,0,0.6)] hover:border-white/25 transition-all duration-300 flex flex-col md:flex-row items-center justify-between gap-6">
           
-          {/* Community Highlights Metric Stats with Refined Typography */}
+          {/* Community Highlights Metric Stats */}
           <div className="grid grid-cols-3 gap-6 sm:gap-10 divide-x divide-white/15 text-center sm:text-left w-full md:w-auto items-center">
             <div className="pr-2 sm:pr-4">
               <div className="flex items-baseline justify-center sm:justify-start gap-0.5">
