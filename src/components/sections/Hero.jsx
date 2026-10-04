@@ -70,10 +70,10 @@ export default function Hero({ onRSVPClick }) {
             </div>
           </div>
 
-          {/* Glass Style Headline - Floating Elegantly with Frosted Glass Badge */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)] mb-6">
+          {/* Glass Style Headline - Clean, Seamless Typography without any box lines */}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.12] text-white drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)] mb-6">
             Where{' '}
-            <span className="relative inline-block px-3.5 py-0.5 rounded-2xl bg-white/[0.08] backdrop-blur-md border border-white/25 text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-pink-300 to-violet-300 shadow-[0_8px_32px_rgba(255,255,255,0.12)]">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-rose-300 to-violet-300 drop-shadow-[0_2px_20px_rgba(251,191,36,0.3)]">
               Creativity
             </span> <br />
             Resonates.
@@ -119,39 +119,56 @@ export default function Hero({ onRSVPClick }) {
         </div>
       </div>
 
-      {/* 4. Bottom Floating Stats & Live Equalizer Dock - Transparent Glass Rectangular Bar */}
+      {/* 4. Bottom Floating Stats & Live Equalizer Dock - Classy Luxury Glass Dock */}
       <div className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12">
-        <div className="p-4 sm:p-5 rounded-3xl bg-white/[0.07] backdrop-blur-2xl border border-white/25 shadow-[0_8px_32px_0_rgba(0,0,0,0.45)] hover:border-white/40 transition-colors flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="px-6 py-4 sm:px-8 sm:py-5 rounded-2xl sm:rounded-full bg-gradient-to-r from-black/50 via-black/35 to-black/50 backdrop-blur-2xl border border-white/15 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.22),0_15px_45px_rgba(0,0,0,0.6)] hover:border-white/25 transition-all duration-300 flex flex-col md:flex-row items-center justify-between gap-6">
           
-          {/* Community Highlights Metric Stats */}
-          <div className="grid grid-cols-3 gap-6 sm:gap-10 divide-x divide-white/20 text-center sm:text-left w-full md:w-auto">
+          {/* Community Highlights Metric Stats with Refined Typography */}
+          <div className="grid grid-cols-3 gap-6 sm:gap-10 divide-x divide-white/15 text-center sm:text-left w-full md:w-auto items-center">
             <div className="pr-2 sm:pr-4">
-              <div className="text-2xl sm:text-3xl font-black text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">50+</div>
-              <div className="text-[11px] sm:text-xs text-gray-200 mt-0.5 font-medium drop-shadow-sm">Jammers / Circle</div>
+              <div className="flex items-baseline justify-center sm:justify-start gap-0.5">
+                <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">50</span>
+                <span className="text-amber-400 font-bold text-lg">+</span>
+              </div>
+              <div className="text-[10px] sm:text-[11px] uppercase tracking-wider text-zinc-300/80 mt-0.5 font-medium">Jammers / Circle</div>
             </div>
+            
             <div className="px-3 sm:px-6">
-              <div className="text-2xl sm:text-3xl font-black text-amber-300 drop-shadow-[0_2px_10px_rgba(251,191,36,0.4)]">100%</div>
-              <div className="text-[11px] sm:text-xs text-gray-200 mt-0.5 font-medium drop-shadow-sm">Unplugged Soul</div>
+              <div className="flex items-baseline justify-center sm:justify-start gap-0.5">
+                <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-amber-300 drop-shadow-[0_2px_12px_rgba(251,191,36,0.35)]">100</span>
+                <span className="text-amber-400 font-bold text-lg">%</span>
+              </div>
+              <div className="text-[10px] sm:text-[11px] uppercase tracking-wider text-zinc-300/80 mt-0.5 font-medium">Unplugged Soul</div>
             </div>
+            
             <div className="pl-3 sm:pl-6">
-              <div className="text-2xl sm:text-3xl font-black text-violet-300 drop-shadow-[0_2px_10px_rgba(167,139,250,0.4)]">0%</div>
-              <div className="text-[11px] sm:text-xs text-gray-200 mt-0.5 font-medium drop-shadow-sm">Stage Fright</div>
+              <div className="flex items-baseline justify-center sm:justify-start gap-0.5">
+                <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-violet-300 drop-shadow-[0_2px_12px_rgba(167,139,250,0.35)]">0</span>
+                <span className="text-violet-400 font-bold text-lg">%</span>
+              </div>
+              <div className="text-[10px] sm:text-[11px] uppercase tracking-wider text-zinc-300/80 mt-0.5 font-medium">Stage Fright</div>
             </div>
           </div>
 
-          {/* Live Soundwave Indicator & Policy */}
-          <div className="flex items-center gap-4 sm:gap-6 border-t md:border-t-0 md:border-l border-white/20 pt-3 md:pt-0 md:pl-6 w-full md:w-auto justify-between md:justify-end">
+          {/* Live Soundwave Indicator & Classy Acoustic Tag */}
+          <div className="flex items-center gap-4 sm:gap-6 border-t md:border-t-0 md:border-l border-white/15 pt-3 md:pt-0 md:pl-8 w-full md:w-auto justify-between md:justify-end">
             <div className="text-left">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-amber-300 block font-bold drop-shadow-sm">
-                COMMUNITY SANCTUARY
-              </span>
-              <p className="text-xs sm:text-sm font-semibold text-white drop-shadow-sm">
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+                </span>
+                <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-amber-300 font-semibold drop-shadow-sm">
+                  ACOUSTIC SANCTUARY
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm font-medium text-zinc-200 mt-0.5 drop-shadow-sm">
                 🎸 All Instruments & Voices Welcomed
               </p>
             </div>
 
-            {/* Animated Equalizer Bars */}
-            <div className="flex items-end gap-1 bg-white/10 px-3 py-2 rounded-xl border border-white/20 shrink-0 backdrop-blur-md" title="Sounding live in Bangalore">
+            {/* Minimalist Studio Equalizer Bar Capsule */}
+            <div className="flex items-end gap-1.5 bg-black/40 px-3.5 py-2.5 rounded-xl border border-white/10 shrink-0 backdrop-blur-md shadow-inner" title="Live Sounding Bangalore">
               <div className="w-1 bg-amber-400 rounded-full animate-equalizer-1"></div>
               <div className="w-1 bg-violet-400 rounded-full animate-equalizer-2"></div>
               <div className="w-1 bg-sunset-500 rounded-full animate-equalizer-3"></div>
