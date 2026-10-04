@@ -46,17 +46,17 @@ export default function Hero({ onRSVPClick }) {
         </div>
       </div>
 
-      {/* 3. Hero Main Narrative Center Block (Overlaid with Frosted Glass for Total Legibility) */}
-      <div className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 my-auto py-6 sm:py-10">
-        <div className="max-w-2xl p-6 sm:p-8 rounded-3xl bg-black/65 border border-white/20 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.85)]">
+      {/* 3. Hero Main Narrative: Floating Directly Over Photo with Pure Glass Styling (No enclosing box) */}
+      <div className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 my-auto py-8 sm:py-14">
+        <div className="max-w-3xl text-left">
           
-          {/* Skiper UI (Skiper27) Animated Rolling Text Banner */}
-          <div className="inline-flex items-center gap-2.5 px-3 sm:px-3.5 py-1.5 rounded-xl bg-white/10 border border-violet-400/40 backdrop-blur-md shadow-md mb-3 sm:mb-4 group hover:border-amber-400/60 transition-all">
-            <div className="w-5 h-5 rounded-md bg-gradient-to-tr from-amber-500 via-pink-500 to-violet-600 p-0.5 shrink-0 flex items-center justify-center">
+          {/* Skiper UI (Skiper27) Animated Rolling Text Glass Pill */}
+          <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/[0.08] border border-white/20 backdrop-blur-xl shadow-lg mb-4 sm:mb-5 group hover:border-amber-400/50 transition-all">
+            <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-amber-500 via-pink-500 to-violet-600 p-0.5 shrink-0 flex items-center justify-center">
               <Sparkles className="w-3 h-3 text-white" />
             </div>
             <div className="flex items-center gap-1.5 overflow-hidden">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-amber-400 shrink-0">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-amber-300 shrink-0">
                 MOTTO:
               </span>
               <RollingText 
@@ -70,24 +70,17 @@ export default function Hero({ onRSVPClick }) {
             </div>
           </div>
 
-          {/* Refined Headline with Requested Phrasing & Balanced Size */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-[1.1] text-white drop-shadow-[0_2px_15px_rgba(0,0,0,0.9)] mb-3 sm:mb-4">
+          {/* Glass Style Headline - Floating Elegantly with Frosted Glass Badge */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1] text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)] mb-6">
             Where{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-pink-400 to-violet-400">
+            <span className="relative inline-block px-3.5 py-0.5 rounded-2xl bg-white/[0.08] backdrop-blur-md border border-white/25 text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-pink-300 to-violet-300 shadow-[0_8px_32px_rgba(255,255,255,0.12)]">
               Creativity
-            </span>{' '}
-            <br className="hidden sm:inline" />
+            </span> <br />
             Resonates.
           </h1>
 
-          {/* Soulful Narrative Paragraph */}
-          <p className="text-sm sm:text-base text-gray-200 leading-relaxed font-normal drop-shadow-sm mb-6 max-w-xl">
-            Step into <strong>Jam Junction</strong> by <strong>reson.at</strong> — Bangalore’s soulful unplugged jam sanctuary. 
-            Bring your guitar, cajon, voice, or simply pull up a chair. No stage, no rehearsals, zero pressure.
-          </p>
-
-          {/* Premium Action Group */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+          {/* Premium Floating Glass Action Buttons */}
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
             
             {/* Primary Action Button: Book Tickets */}
             <button 
@@ -106,7 +99,7 @@ export default function Hero({ onRSVPClick }) {
             {/* Secondary Action: Virtual Jam Pad */}
             <a 
               href="#jam-pad"
-              className="px-5 py-3.5 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/25 hover:border-violet-400/60 font-semibold text-sm sm:text-base transition-all backdrop-blur-xl flex items-center justify-center gap-2 shadow-lg hover:shadow-violet-600/20 active:scale-95"
+              className="px-5 py-3.5 rounded-full bg-white/[0.08] hover:bg-white/[0.16] text-white border border-white/25 hover:border-violet-400/60 font-semibold text-sm sm:text-base transition-all backdrop-blur-xl flex items-center justify-center gap-2 shadow-lg hover:shadow-violet-600/20 active:scale-95"
             >
               <Music className="w-4 h-4 text-amber-400" />
               <span>Try Jam Lounge</span>
@@ -115,7 +108,7 @@ export default function Hero({ onRSVPClick }) {
             {/* Tertiary Action: Visual Diary */}
             <a 
               href="#gallery"
-              className="px-4 py-3.5 rounded-full bg-black/40 hover:bg-black/60 text-gray-300 hover:text-white border border-white/15 hover:border-white/30 font-semibold text-xs sm:text-sm transition-all backdrop-blur-xl flex items-center justify-center gap-1.5 active:scale-95"
+              className="px-5 py-3.5 rounded-full bg-black/40 hover:bg-black/60 text-gray-200 hover:text-white border border-white/15 hover:border-white/30 font-semibold text-xs sm:text-sm transition-all backdrop-blur-xl flex items-center justify-center gap-1.5 active:scale-95"
             >
               <span>Visual Diary</span>
               <ChevronRight className="w-3.5 h-3.5 text-violet-400" />
@@ -126,39 +119,39 @@ export default function Hero({ onRSVPClick }) {
         </div>
       </div>
 
-      {/* 4. Bottom Floating Stats & Live Equalizer Dock */}
+      {/* 4. Bottom Floating Stats & Live Equalizer Dock - Transparent Glass Rectangular Bar */}
       <div className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12">
-        <div className="p-4 sm:p-5 rounded-3xl bg-black/75 border border-white/15 backdrop-blur-2xl shadow-[0_15px_50px_rgba(0,0,0,0.8)] flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="p-4 sm:p-5 rounded-3xl bg-white/[0.07] backdrop-blur-2xl border border-white/25 shadow-[0_8px_32px_0_rgba(0,0,0,0.45)] hover:border-white/40 transition-colors flex flex-col md:flex-row items-center justify-between gap-6">
           
           {/* Community Highlights Metric Stats */}
-          <div className="grid grid-cols-3 gap-6 sm:gap-10 divide-x divide-white/10 text-center sm:text-left w-full md:w-auto">
+          <div className="grid grid-cols-3 gap-6 sm:gap-10 divide-x divide-white/20 text-center sm:text-left w-full md:w-auto">
             <div className="pr-2 sm:pr-4">
-              <div className="text-2xl sm:text-3xl font-black text-white">50+</div>
-              <div className="text-[11px] sm:text-xs text-gray-400 mt-0.5 font-medium">Jammers / Circle</div>
+              <div className="text-2xl sm:text-3xl font-black text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">50+</div>
+              <div className="text-[11px] sm:text-xs text-gray-200 mt-0.5 font-medium drop-shadow-sm">Jammers / Circle</div>
             </div>
             <div className="px-3 sm:px-6">
-              <div className="text-2xl sm:text-3xl font-black text-amber-400">100%</div>
-              <div className="text-[11px] sm:text-xs text-gray-400 mt-0.5 font-medium">Unplugged Soul</div>
+              <div className="text-2xl sm:text-3xl font-black text-amber-300 drop-shadow-[0_2px_10px_rgba(251,191,36,0.4)]">100%</div>
+              <div className="text-[11px] sm:text-xs text-gray-200 mt-0.5 font-medium drop-shadow-sm">Unplugged Soul</div>
             </div>
             <div className="pl-3 sm:pl-6">
-              <div className="text-2xl sm:text-3xl font-black text-violet-400">0%</div>
-              <div className="text-[11px] sm:text-xs text-gray-400 mt-0.5 font-medium">Stage Fright</div>
+              <div className="text-2xl sm:text-3xl font-black text-violet-300 drop-shadow-[0_2px_10px_rgba(167,139,250,0.4)]">0%</div>
+              <div className="text-[11px] sm:text-xs text-gray-200 mt-0.5 font-medium drop-shadow-sm">Stage Fright</div>
             </div>
           </div>
 
           {/* Live Soundwave Indicator & Policy */}
-          <div className="flex items-center gap-4 sm:gap-6 border-t md:border-t-0 md:border-l border-white/10 pt-3 md:pt-0 md:pl-6 w-full md:w-auto justify-between md:justify-end">
+          <div className="flex items-center gap-4 sm:gap-6 border-t md:border-t-0 md:border-l border-white/20 pt-3 md:pt-0 md:pl-6 w-full md:w-auto justify-between md:justify-end">
             <div className="text-left">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 block font-bold">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-amber-300 block font-bold drop-shadow-sm">
                 COMMUNITY SANCTUARY
               </span>
-              <p className="text-xs sm:text-sm font-semibold text-gray-200">
+              <p className="text-xs sm:text-sm font-semibold text-white drop-shadow-sm">
                 🎸 All Instruments & Voices Welcomed
               </p>
             </div>
 
             {/* Animated Equalizer Bars */}
-            <div className="flex items-end gap-1 bg-white/5 px-3 py-2 rounded-xl border border-white/10 shrink-0" title="Sounding live in Bangalore">
+            <div className="flex items-end gap-1 bg-white/10 px-3 py-2 rounded-xl border border-white/20 shrink-0 backdrop-blur-md" title="Sounding live in Bangalore">
               <div className="w-1 bg-amber-400 rounded-full animate-equalizer-1"></div>
               <div className="w-1 bg-violet-400 rounded-full animate-equalizer-2"></div>
               <div className="w-1 bg-sunset-500 rounded-full animate-equalizer-3"></div>
