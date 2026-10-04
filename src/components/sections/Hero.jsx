@@ -6,7 +6,7 @@ import { ParticleText } from '@/components/v1/ParticleText';
 
 export default function Hero({ onRSVPClick }) {
   return (
-    <section className="relative min-h-[90vh] sm:min-h-[94vh] flex flex-col justify-between overflow-hidden select-none">
+    <section className="relative min-h-[85vh] sm:min-h-[88vh] flex flex-col justify-between overflow-hidden select-none">
       
       {/* 1. Main Community Photo Canvas with Dedicated Contrast Scrim */}
       <div className="absolute inset-0 z-0 overflow-hidden">
@@ -104,7 +104,7 @@ export default function Hero({ onRSVPClick }) {
       </div>
 
       {/* 3. Bottom Floating Stats & Live Equalizer Dock - Classy Luxury Glass Dock */}
-      <div className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12">
+      <div className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-6 sm:pb-8">
         <div className="px-6 py-4 sm:px-8 sm:py-5 rounded-2xl sm:rounded-full bg-gradient-to-r from-black/50 via-black/35 to-black/50 backdrop-blur-2xl border border-white/15 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.22),0_15px_45px_rgba(0,0,0,0.6)] hover:border-white/25 transition-all duration-300 flex flex-col md:flex-row items-center justify-between gap-6">
           
           {/* Community Highlights Metric Stats */}
