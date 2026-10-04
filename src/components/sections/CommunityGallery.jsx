@@ -115,17 +115,17 @@ export default function CommunityGallery() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* 1. Header Section */}
+        {/* 1. Header Section (Deliberate Type Scale: 44-56px heading, 16-18px subtitle) */}
         <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.06] border border-white/10 text-amber-300 text-xs font-semibold tracking-wider uppercase mb-4 backdrop-blur-md">
             <Camera className="w-3.5 h-3.5 text-amber-400" />
             <span>Community Memories</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-[46px] font-extrabold text-white tracking-tight leading-tight">
             The Visual <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-pink-400 to-violet-400">Diary</span>
           </h2>
-          <p className="text-base sm:text-lg text-zinc-400 mt-3 font-normal leading-relaxed">
+          <p className="text-base sm:text-lg text-zinc-300 mt-3 font-normal leading-relaxed">
             Raw, unfiltered moments from our weekend jam circles. Real people, authentic harmonies.
           </p>
         </div>
@@ -183,17 +183,17 @@ export default function CommunityGallery() {
 
               {/* Category Pill Tag */}
               <div className="absolute top-4 left-4 pointer-events-none">
-                <span className="px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-[10px] font-mono uppercase tracking-wider text-amber-300 font-semibold border border-white/15">
+                <span className="px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-xs font-mono uppercase tracking-wider text-amber-300 font-semibold border border-white/15">
                   {item.category}
                 </span>
               </div>
 
               {/* Bottom Caption Information */}
               <div className="absolute bottom-0 inset-x-0 p-4 sm:p-5 pointer-events-none text-left">
-                <h3 className="text-base sm:text-lg font-bold text-white tracking-tight leading-snug drop-shadow-sm">
+                <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight leading-snug drop-shadow-sm">
                   {item.title}
                 </h3>
-                <p className="text-xs text-zinc-300 mt-1 line-clamp-1 font-normal opacity-90 group-hover:opacity-100 transition-opacity">
+                <p className="text-sm sm:text-[15px] text-zinc-200 mt-1 line-clamp-1 font-normal opacity-90 group-hover:opacity-100 transition-opacity">
                   {item.subtitle}
                 </p>
               </div>

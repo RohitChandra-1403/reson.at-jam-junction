@@ -49,19 +49,19 @@ export default function JamJunctionEvent() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Header Section (Consistent Spacing: 16-20px heading-to-subtitle) */}
+        {/* Header Section (Deliberate Type Scale: 44-56px heading, 16-18px subtitle) */}
         <div className="text-center max-w-2xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.06] border border-white/10 text-amber-300 text-xs font-semibold tracking-wider uppercase mb-4 backdrop-blur-md">
             <Radio className="w-3.5 h-3.5 text-amber-400" />
             <span>Format & Flow</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-[46px] font-extrabold text-white tracking-tight leading-tight">
             How The Jam <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-pink-400 to-violet-400">Flows</span>
           </h2>
 
-          {/* Heading to Subtitle Gap: 16-20px (mt-4 sm:mt-5) */}
-          <p className="text-base sm:text-lg text-zinc-400 mt-4 sm:mt-5 font-normal leading-relaxed">
+          {/* Heading to Subtitle Gap: 16-20px; Subtitle: 16-18px */}
+          <p className="text-base sm:text-lg text-zinc-300 mt-4 sm:mt-5 font-normal leading-relaxed">
             Four organic stages of an acoustic gathering. No stage barriers, no judgment, pure collective music.
           </p>
         </div>
@@ -78,7 +78,7 @@ export default function JamJunctionEvent() {
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center font-mono text-xs font-bold ${phase.activeBadge} bg-dusk-900 shadow-md`}>
                     {phase.number}
                   </div>
-                  <span className="text-[11px] font-mono tracking-wider text-zinc-400 mt-2 uppercase font-medium">
+                  <span className="text-xs font-mono tracking-wider text-zinc-400 mt-2 uppercase font-medium">
                     {phase.timelineLabel}
                   </span>
                 </div>
@@ -86,7 +86,7 @@ export default function JamJunctionEvent() {
             </div>
           </div>
 
-          {/* 4 Simplified, Classy Phase Cards (Inside Padding: 24-32px, Clear Title-to-Desc Gap) */}
+          {/* 4 Simplified Phase Cards (Card Heading: 22-26px, Body: 15-16px high contrast) */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
             {phases.map((phase, idx) => (
               <div 
@@ -104,20 +104,20 @@ export default function JamJunctionEvent() {
                     </div>
                   </div>
 
-                  {/* Card Title */}
-                  <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight leading-snug">
+                  {/* Card Title (22-26px range on desktop) */}
+                  <h3 className="text-xl sm:text-[22px] font-bold text-white tracking-tight leading-snug">
                     {phase.title}
                   </h3>
 
-                  {/* Increased Space between Heading and Description (16-20px) */}
-                  <p className="text-sm text-zinc-300/90 leading-relaxed font-normal mt-4">
+                  {/* Card Description (15-16px readable body font, high contrast text-zinc-200) */}
+                  <p className="text-[15px] sm:text-base text-zinc-200 leading-relaxed font-normal mt-4">
                     {phase.desc}
                   </p>
                 </div>
 
                 {/* Simplified Card Footer: Clean Subtle Pill */}
                 <div className="mt-6 pt-4 border-t border-white/[0.08]">
-                  <span className="inline-flex text-[11px] font-medium text-zinc-400 px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/5">
+                  <span className="inline-flex text-xs font-medium text-zinc-300 px-3 py-1 rounded-full bg-white/[0.05] border border-white/10">
                     {phase.genre}
                   </span>
                 </div>
@@ -135,13 +135,13 @@ export default function JamJunctionEvent() {
               🎸
             </div>
             <div>
-              <span className="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-widest text-amber-400">
+              <span className="text-xs font-mono font-bold uppercase tracking-widest text-amber-400">
                 STAGE RIDER & GEAR POLICY
               </span>
-              <h3 className="text-lg sm:text-xl font-bold text-white mt-0.5">
+              <h3 className="text-xl sm:text-2xl font-bold text-white mt-1">
                 Bring Your Instrument (Or Just Your Voice)
               </h3>
-              <p className="text-xs sm:text-sm text-zinc-300 mt-1 max-w-xl leading-relaxed">
+              <p className="text-sm sm:text-base text-zinc-200 mt-1.5 max-w-xl leading-relaxed">
                 Guitars, Ukuleles, Keyboards, Cajons, Flutes, Violins, or simple rhythm clapping. 
                 Backup acoustic instruments are provided in the lounge.
               </p>

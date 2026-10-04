@@ -67,17 +67,17 @@ export default function TeamMembers() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Section Header */}
+        {/* Section Header (Deliberate Type Scale: 44-56px heading, 16-18px subtitle) */}
         <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.06] border border-white/10 text-amber-300 text-xs font-semibold tracking-wider uppercase mb-4 backdrop-blur-md">
             <Users className="w-3.5 h-3.5 text-amber-400" />
             <span>The Circle Hosts</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-[46px] font-extrabold text-white tracking-tight leading-tight">
             Meet The <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-pink-400 to-violet-400">Core Crew</span>
           </h2>
-          <p className="text-base sm:text-lg text-zinc-400 mt-3 font-normal leading-relaxed">
+          <p className="text-base sm:text-lg text-zinc-300 mt-3 font-normal leading-relaxed">
             The community organizers and musicians dedicated to keeping Jam Junction authentic, welcoming, and pressure-free.
           </p>
         </div>
@@ -104,23 +104,23 @@ export default function TeamMembers() {
 
                   {/* Clean Instrument Pill */}
                   <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-                    <span className="text-[11px] font-medium text-white/90 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15">
+                    <span className="text-xs font-medium text-white/90 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15">
                       {member.instrument}
                     </span>
                   </div>
                 </div>
 
-                {/* 2. Scannable Typography: Name & Role */}
+                {/* 2. Scannable Typography: Name (22px) & Role (12-14px) */}
                 <div className="text-left">
-                  <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight leading-snug">
+                  <h3 className="text-xl sm:text-[22px] font-bold text-white tracking-tight leading-snug">
                     {member.name}
                   </h3>
-                  <p className="text-xs font-semibold text-amber-400 mt-1 uppercase tracking-wider font-mono">
+                  <p className="text-xs sm:text-sm font-semibold text-amber-400 mt-1 uppercase tracking-wider font-mono">
                     {member.role}
                   </p>
                   
-                  {/* 3. Concise 2-3 Line Description */}
-                  <p className="text-sm text-zinc-300 leading-relaxed font-normal mt-3 line-clamp-3">
+                  {/* 3. Concise 2-3 Line Description (15-16px readable body font) */}
+                  <p className="text-[15px] sm:text-base text-zinc-200 leading-relaxed font-normal mt-3 line-clamp-3">
                     {member.bio}
                   </p>
                 </div>

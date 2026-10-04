@@ -44,10 +44,10 @@ export default function FAQ() {
             <span>Musician & Jammer Intel</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-[46px] font-extrabold text-white tracking-tight leading-tight">
             Backstage <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-pink-400 to-violet-400">FAQ</span>
           </h2>
-          <p className="text-xs sm:text-base text-gray-400 mt-2 font-medium">
+          <p className="text-base sm:text-lg text-zinc-300 mt-3 font-normal leading-relaxed">
             Everything you need to know before stepping onto the jam floor.
           </p>
         </div>
@@ -79,8 +79,8 @@ export default function FAQ() {
                       <span className="text-xs font-black">🎸</span>
                     </div>
 
-                    <h3 className={`text-sm sm:text-lg font-black tracking-tight transition-colors ${
-                      isOpen ? 'text-white' : 'text-gray-200 hover:text-white'
+                    <h3 className={`text-base sm:text-lg lg:text-xl font-bold tracking-tight transition-colors ${
+                      isOpen ? 'text-white' : 'text-zinc-200 hover:text-white'
                     }`}>
                       {faq.q}
                     </h3>
@@ -94,7 +94,7 @@ export default function FAQ() {
                 </button>
 
                 {isOpen && (
-                  <div className="px-4 pb-4 sm:px-6 sm:pb-6 pt-1 text-xs sm:text-sm text-gray-300 leading-relaxed border-t border-white/5 animate-in fade-in duration-200">
+                  <div className="px-4 pb-4 sm:px-6 sm:pb-6 pt-1 text-[15px] sm:text-base text-zinc-200 leading-relaxed font-normal border-t border-white/5 animate-in fade-in duration-200">
                     <p className="pl-0 sm:pl-11">{faq.a}</p>
                   </div>
                 )}

@@ -360,10 +360,10 @@ export default function VirtualJamPad() {
             <span>Interactive Sound Studio</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-[46px] font-extrabold text-white tracking-tight leading-tight">
             Virtual <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-amber-300 to-sunset-500">Jam Lounge</span>
           </h2>
-          <p className="text-sm sm:text-lg text-gray-300 mt-2 sm:mt-3 font-medium">
+          <p className="text-base sm:text-lg text-zinc-300 mt-3 font-normal leading-relaxed">
             Tap acoustic chords, layer organic cajon beats, and discover your progression. Zero experience needed!
           </p>
         </div>
