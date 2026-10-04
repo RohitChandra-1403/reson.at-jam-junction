@@ -7,7 +7,7 @@ import {
 import { 
   validateContent, generateAnonymousIdentity, 
   getChatMessages, saveChatMessage, updateMessageReaction 
-} from '../utils/chatModerator';
+} from '@/utils/chatModerator';
 
 const QUICK_PROMPTS = [
   '🎸 What songs are we jamming to?',

@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import ScrollGuitarAnimation from './components/ScrollGuitarAnimation';
-import GsapAmbientEffects from './components/GsapAmbientEffects';
-import VirtualJamPad from './components/VirtualJamPad';
-import JamJunctionEvent from './components/JamJunctionEvent';
-import RSVPModal from './components/RSVPModal';
-import AdminTicketVerifierModal from './components/AdminTicketVerifierModal';
-import AdminPanel from './components/AdminPanel';
-import CommunityGallery from './components/CommunityGallery';
-import AnonymousChat from './components/AnonymousChat';
-import TeamMembers from './components/TeamMembers';
-import FAQ from './components/FAQ';
-import Footer from './components/Footer';
+import { Navbar, Footer } from '@/components/layout';
+import { GsapAmbientEffects, ScrollGuitarAnimation } from '@/components/common';
+import { 
+  Hero, 
+  JamJunctionEvent, 
+  VirtualJamPad, 
+  CommunityGallery, 
+  TeamMembers, 
+  FAQ 
+} from '@/components/sections';
+import { 
+  RSVPModal, 
+  AdminPanel, 
+  AdminTicketVerifierModal, 
+  AnonymousChat 
+} from '@/components/modals';
 import { ShieldCheck, QrCode, LayoutDashboard } from 'lucide-react';
 
 function App() {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Radio, ChevronRight, Sparkles, Music, Users, MapPin, Play, Ticket, Disc } from 'lucide-react';
-import heroCommunityImg from '../assets/hero-reson-jam.jpg';
+import heroCommunityImg from '@/assets/images/hero-reson-jam.jpg';
 
 export default function Hero({ onRSVPClick }) {
   return (

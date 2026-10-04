@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, Play, Sparkles, ExternalLink } from 'lucide-react';
-import heroCommunityImg from '../assets/hero-reson-jam.jpg';
+import heroCommunityImg from '@/assets/images/hero-reson-jam.jpg';
 
 const GALLERY_ITEMS = [
   {

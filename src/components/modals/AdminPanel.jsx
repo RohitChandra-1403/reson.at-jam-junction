@@ -11,7 +11,7 @@ import {
   getAllTickets, saveTicket, updateTicketStatus, 
   deleteTicket, exportTicketsToCSV, resetDemoTickets,
   generateVerificationUrl 
-} from '../utils/ticketStore';
+} from '@/utils/ticketStore';
 
 const CATEGORY_OPTIONS = [
   'All Categories',

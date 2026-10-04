@@ -6,7 +6,7 @@ import {
   Camera, CameraOff, Sparkles, ChevronRight, Eye, AlertTriangle
 } from 'lucide-react';
 import jsQR from 'jsqr';
-import { getAllTickets, getTicketByTxnOrId, decodeVerificationPayload, updateTicketStatus } from '../utils/ticketStore';
+import { getAllTickets, getTicketByTxnOrId, decodeVerificationPayload, updateTicketStatus } from '@/utils/ticketStore';
 
 export default function AdminTicketVerifierModal({ initialTxnId, initialPayload, onClose }) {
   const [viewMode, setViewMode] = useState(initialTxnId || initialPayload ? 'DETAILS' : 'SCANNER');

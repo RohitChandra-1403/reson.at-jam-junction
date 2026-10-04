@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import confetti from 'canvas-confetti';
-import { saveTicket, generateVerificationUrl } from '../utils/ticketStore';
+import { saveTicket, generateVerificationUrl } from '@/utils/ticketStore';
 
 const InstagramIcon = ({ className = "w-3.5 h-3.5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
