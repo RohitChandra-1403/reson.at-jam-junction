@@ -1,379 +1,307 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { ArrowLeft, ArrowRight, Play, Sparkles, ExternalLink } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Play, Sparkles, ExternalLink, X, ChevronLeft, ChevronRight, Image as ImageIcon, Camera } from 'lucide-react';
 import heroCommunityImg from '@/assets/images/hero-reson-jam.jpg';
 
 const GALLERY_ITEMS = [
   {
     id: 1,
     title: "Jam Junction Family",
-    subtitle: "50+ creators united at Reson@ lounge",
+    subtitle: "50+ creators united at Reson@ lounge circle in Bangalore",
     category: "Jam Fam",
     img: heroCommunityImg,
-    isCommunityPhoto: true,
     isVideo: false,
-    tag: "🔴 Live from Bangalore Lounge"
+    aspect: "aspect-[4/3]"
   },
   {
     id: 2,
     title: "Acoustic Sunset Chords",
-    subtitle: "Fingerpicking melodies & original songs",
+    subtitle: "Raw acoustic fingerpicking and soulful melodies",
     category: "Acoustic Circles",
     img: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=900&h=1200",
     isVideo: false,
-    tag: "Acoustic Vibing"
+    aspect: "aspect-[3/4]"
   },
   {
     id: 3,
     title: "Vocal Crossroads",
-    subtitle: "Raw unplugged four-part harmonies",
+    subtitle: "Spontaneous four-part harmonies and mashups",
     category: "Harmonies",
-    img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=900&h=1200",
+    img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=900&h=900",
     isVideo: true,
-    tag: "Soulful Vocals"
+    aspect: "aspect-square"
   },
   {
     id: 4,
     title: "The Cajon Drop",
-    subtitle: "Rhythmic pulses that set the room bouncing",
+    subtitle: "Rhythmic beats and percussion that got the whole room pulsing",
     category: "Cajon & Beats",
     img: "https://images.unsplash.com/photo-1465847899084-d164df4dedc6?auto=format&fit=crop&q=80&w=900&h=1200",
     isVideo: false,
-    tag: "Rhythm & Percussion"
+    aspect: "aspect-[3/4]"
   },
   {
     id: 5,
     title: "Midnight Unplugged",
-    subtitle: "When the lights dim and the magic strikes",
+    subtitle: "When the lights dim and spontaneous improvisation begins",
     category: "Late Night",
-    img: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=900&h=1200",
+    img: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=900&h=600",
     isVideo: true,
-    tag: "Late Jam Sessions"
+    aspect: "aspect-[16/10]"
   },
   {
     id: 6,
     title: "Circle of Stories",
-    subtitle: "Laughter, lyrics, and shared memories",
+    subtitle: "Laughter, lyrics, and shared musical memories between sets",
     category: "Jam Fam",
-    img: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=900&h=1200",
+    img: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=900&h=1100",
     isVideo: false,
-    tag: "Community Bonds"
+    aspect: "aspect-[4/5]"
+  },
+  {
+    id: 7,
+    title: "Strings & Harmonica",
+    subtitle: "Soulful indie folk fusion created on the fly",
+    category: "Acoustic Circles",
+    img: "https://images.unsplash.com/photo-1465225314224-587cd83d322b?auto=format&fit=crop&q=80&w=900&h=900",
+    isVideo: false,
+    aspect: "aspect-square"
+  },
+  {
+    id: 8,
+    title: "All-Room Acoustic Chorus",
+    subtitle: "Everyone singing in unison with no microphones needed",
+    category: "Harmonies",
+    img: "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?auto=format&fit=crop&q=80&w=900&h=1200",
+    isVideo: true,
+    aspect: "aspect-[3/4]"
   }
 ];
 
 const CATEGORIES = ["All Moments", "Jam Fam", "Acoustic Circles", "Harmonies", "Cajon & Beats", "Late Night"];
 
 export default function CommunityGallery() {
-  const [activeIndex, setActiveIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("All Moments");
-  const [dragOffset, setDragOffset] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  
-  const startXRef = useRef(0);
-  const currentDragRef = useRef(0);
-  const containerRef = useRef(null);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
 
-  // Filter items based on active category
+  // Filter items
   const filteredItems = selectedCategory === "All Moments" 
     ? GALLERY_ITEMS 
     : GALLERY_ITEMS.filter(item => item.category === selectedCategory);
 
-  const total = filteredItems.length;
-
-  // Keep active index within bounds on category switch
+  // Keyboard navigation for Lightbox
   useEffect(() => {
-    setActiveIndex(0);
-  }, [selectedCategory]);
+    const handleKeyDown = (e) => {
+      if (lightboxIndex === null) return;
+      if (e.key === 'Escape') setLightboxIndex(null);
+      if (e.key === 'ArrowRight') {
+        setLightboxIndex((prev) => (prev + 1) % filteredItems.length);
+      }
+      if (e.key === 'ArrowLeft') {
+        setLightboxIndex((prev) => (prev - 1 + filteredItems.length) % filteredItems.length);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lightboxIndex, filteredItems.length]);
 
-  const handlePrev = () => {
-    setActiveIndex((prev) => (prev > 0 ? prev - 1 : total - 1));
-  };
-
-  const handleNext = () => {
-    setActiveIndex((prev) => (prev < total - 1 ? prev + 1 : 0));
-  };
-
-  // --- Touch & Mouse drag handlers for mobile & desktop swiping ---
-  const handleTouchStart = (e) => {
-    setIsDragging(true);
-    startXRef.current = e.touches[0].clientX;
-    currentDragRef.current = 0;
-  };
-
-  const handleTouchMove = (e) => {
-    if (!isDragging) return;
-    const currentX = e.touches[0].clientX;
-    const diff = currentX - startXRef.current;
-    currentDragRef.current = diff;
-    setDragOffset(diff);
-  };
-
-  const handleTouchEnd = () => {
-    if (!isDragging) return;
-    setIsDragging(false);
-    const threshold = 45; // Minimum swipe distance in px
-    if (currentDragRef.current > threshold) {
-      handlePrev();
-    } else if (currentDragRef.current < -threshold) {
-      handleNext();
-    }
-    setDragOffset(0);
-    currentDragRef.current = 0;
-  };
-
-  // Mouse drag support
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-    startXRef.current = e.clientX;
-    currentDragRef.current = 0;
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    const diff = e.clientX - startXRef.current;
-    currentDragRef.current = diff;
-    setDragOffset(diff);
-  };
-
-  const handleMouseUp = () => {
-    if (!isDragging) return;
-    setIsDragging(false);
-    const threshold = 50;
-    if (currentDragRef.current > threshold) {
-      handlePrev();
-    } else if (currentDragRef.current < -threshold) {
-      handleNext();
-    }
-    setDragOffset(0);
-    currentDragRef.current = 0;
-  };
-
-  const handleMouseLeave = () => {
-    if (isDragging) {
-      handleMouseUp();
-    }
-  };
+  const activeItem = lightboxIndex !== null ? filteredItems[lightboxIndex] : null;
 
   return (
-    <section id="gallery" className="py-14 sm:py-24 bg-dusk-900 relative overflow-hidden select-none border-t border-white/5">
+    <section id="gallery" className="py-20 sm:py-28 bg-dusk-900 border-t border-white/[0.06] relative overflow-hidden select-none">
       
       {/* Background ambient lighting */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-25 pointer-events-none">
-        <div className="w-[850px] h-[550px] bg-violet-600/35 rounded-full blur-[150px]"></div>
-        <div className="w-[600px] h-[450px] bg-amber-500/25 rounded-full blur-[130px] mix-blend-screen"></div>
-      </div>
+      <div className="absolute top-1/4 -right-20 w-96 h-96 bg-violet-600/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-10 -left-20 w-96 h-96 bg-amber-500/10 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Header Block seamlessly on dark background */}
-        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
-          <span className="inline-block text-[11px] sm:text-xs font-extrabold tracking-[0.25em] text-violet-400 uppercase mb-2 sm:mb-3">
-            GALLERY
-          </span>
-          <h2 className="text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-tight">
-            My Visual <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-amber-300 to-sunset-500">Diary</span>
-          </h2>
-          <p className="text-sm sm:text-lg text-gray-400 mt-2 sm:mt-3 font-medium max-w-xl mx-auto">
-            See the world through our lens: adventures, soulful chords, and moments in photos and videos
-          </p>
-
-          {/* Filter Pills with Horizontal Scroll on Mobile (Zero Clutter) */}
-          <div className="flex items-center overflow-x-auto no-scrollbar gap-2 sm:gap-2.5 mt-6 sm:mt-8 px-1 sm:px-0 sm:flex-wrap sm:justify-center py-1">
-            {CATEGORIES.map((cat) => {
-              const isActive = selectedCategory === cat;
-              return (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 whitespace-nowrap shrink-0 ${
-                    isActive
-                      ? 'bg-gradient-to-r from-violet-600 to-violet-500 text-white shadow-lg shadow-violet-600/35 border border-violet-400/50 scale-105'
-                      : 'bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white border border-white/10 backdrop-blur-md'
-                  }`}
-                >
-                  {cat}
-                </button>
-              );
-            })}
-
-            <a
-              href="https://www.instagram.com/reson.at"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold text-gray-300 bg-white/5 border border-white/15 hover:border-violet-400 hover:text-white transition-all flex items-center gap-1.5 backdrop-blur-md whitespace-nowrap shrink-0"
-            >
-              <span>View More</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </a>
+        {/* 1. Header Section */}
+        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.06] border border-white/10 text-amber-300 text-xs font-semibold tracking-wider uppercase mb-4 backdrop-blur-md">
+            <Camera className="w-3.5 h-3.5 text-amber-400" />
+            <span>Community Memories</span>
           </div>
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
+            The Visual <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-pink-400 to-violet-400">Diary</span>
+          </h2>
+          <p className="text-base sm:text-lg text-zinc-400 mt-3 font-normal leading-relaxed">
+            Raw, unfiltered moments from our weekend jam circles. Real people, authentic harmonies.
+          </p>
         </div>
 
-        {/* 3D Coverflow Carousel Container with Touch & Drag (No White Box!) */}
-        <div 
-          ref={containerRef}
-          className="relative h-[370px] sm:h-[460px] md:h-[500px] w-full flex items-center justify-center overflow-hidden cursor-grab active:cursor-grabbing touch-pan-y my-2"
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
-        >
-          {filteredItems.map((item, idx) => {
-            const offset = idx - activeIndex;
-
-            const isActive = offset === 0;
-            const isPrev = offset === -1;
-            const isNext = offset === 1;
-            const isFarPrev = offset === -2;
-            const isFarNext = offset === 2;
-
-            // Hide cards beyond 2 steps
-            if (Math.abs(offset) > 2) return null;
-
-            // Compute horizontal shift in px + real-time drag offset
-            let translateX = offset * 220 + (isDragging ? dragOffset * 0.75 : 0);
-            let scale = 1;
-            let zIndex = 20;
-            let opacity = 1;
-            let rotateY = 0;
-
-            if (isActive) {
-              scale = 1.15; // Center photo POP OUT effect
-              zIndex = 35;
-              opacity = 1;
-              rotateY = isDragging ? dragOffset * 0.04 : 0;
-            } else if (isPrev) {
-              scale = 0.9;
-              zIndex = 25;
-              opacity = 0.8;
-              translateX = -190 + (isDragging ? dragOffset * 0.75 : 0);
-              rotateY = 14;
-            } else if (isNext) {
-              scale = 0.9;
-              zIndex = 25;
-              opacity = 0.8;
-              translateX = 190 + (isDragging ? dragOffset * 0.75 : 0);
-              rotateY = -14;
-            } else if (isFarPrev) {
-              scale = 0.75;
-              zIndex = 15;
-              opacity = 0.4;
-              translateX = -340 + (isDragging ? dragOffset * 0.75 : 0);
-              rotateY = 24;
-            } else if (isFarNext) {
-              scale = 0.75;
-              zIndex = 15;
-              opacity = 0.4;
-              translateX = 340 + (isDragging ? dragOffset * 0.75 : 0);
-              rotateY = -24;
-            }
-
+        {/* 2. Single-Line Category Filter Bar with Horizontal Scrolling on Mobile */}
+        <div className="flex items-center justify-start sm:justify-center overflow-x-auto no-scrollbar py-2 mb-10 gap-2 sm:gap-2.5 px-2">
+          {CATEGORIES.map((cat) => {
+            const isActive = selectedCategory === cat;
             return (
-              <div
-                key={item.id}
-                onClick={() => !isActive && setActiveIndex(idx)}
-                className={`absolute top-1/2 left-1/2 w-[220px] sm:w-[290px] md:w-[330px] aspect-[4/5] rounded-[24px] sm:rounded-[34px] overflow-hidden select-none cursor-pointer transition-all ${
-                  (isFarPrev || isFarNext) ? 'hidden sm:block' : ''
-                } ${
-                  isDragging ? 'duration-75' : 'duration-500 ease-out'
-                } ${
-                  isActive 
-                    ? 'shadow-[0_25px_60px_rgba(139,92,246,0.35)] ring-2 ring-violet-400/80 border border-white/30' 
-                    : 'shadow-2xl border border-white/10 hover:opacity-95'
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-200 shrink-0 ${
+                  isActive
+                    ? 'bg-white text-dusk-900 shadow-md font-bold'
+                    : 'bg-white/[0.06] text-zinc-300 hover:text-white hover:bg-white/[0.12] border border-white/10'
                 }`}
-                style={{
-                  transform: `translate(-50%, -50%) translate3d(${translateX}px, 0, 0) scale(${scale}) perspective(1000px) rotateY(${rotateY}deg)`,
-                  zIndex,
-                  opacity,
-                }}
               >
-                <img
-                  src={item.img}
-                  alt={item.title}
-                  className="w-full h-full object-cover pointer-events-none transition-transform duration-700 hover:scale-105"
-                  draggable="false"
-                />
-
-                {/* Dark Gradient Scrim for high contrast text readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 pointer-events-none" />
-
-                {/* Top Badge */}
-                <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
-                  <span className="px-3 py-1 rounded-full bg-black/70 backdrop-blur-md text-[11px] font-bold text-white tracking-wide border border-white/20">
-                    {item.tag}
-                  </span>
-                </div>
-
-                {/* Center Pop-out Video Play Icon */}
-                {item.isVideo && (
-                  <div className="absolute bottom-5 right-5 w-10 h-10 rounded-full bg-white/25 backdrop-blur-md border border-white/40 flex items-center justify-center shadow-lg transition-transform hover:scale-110">
-                    <Play className="w-4 h-4 text-white fill-white ml-0.5" />
-                  </div>
-                )}
-
-                {/* Bottom Captions (Center Pop-out photo has vibrant typography) */}
-                <div className="absolute bottom-5 left-5 right-5 pointer-events-none text-left">
-                  <h3 className="text-white font-black text-base sm:text-xl leading-snug drop-shadow-md">
-                    {item.title}
-                  </h3>
-                  {isActive && (
-                    <p className="text-gray-300 text-xs sm:text-sm mt-1 line-clamp-1 font-medium transition-opacity duration-300">
-                      {item.subtitle}
-                    </p>
-                  )}
-                </div>
-
-              </div>
+                {cat}
+              </button>
             );
           })}
         </div>
 
-        {/* Bottom Dark-Glass Arrow Controls & Indicators */}
-        <div className="flex items-center justify-center gap-4 mt-8">
-          <button
-            onClick={handlePrev}
-            className="w-11 h-11 rounded-full border border-white/20 hover:border-violet-400 bg-white/5 hover:bg-white/15 text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-lg backdrop-blur-md"
-            title="Previous photo"
-            aria-label="Previous photo"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
+        {/* 3. Clean Masonry Gallery Grid */}
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5">
+          {filteredItems.map((item, index) => (
+            <div
+              key={item.id}
+              onClick={() => setLightboxIndex(index)}
+              className="break-inside-avoid relative rounded-2xl overflow-hidden group cursor-pointer border border-white/10 hover:border-white/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] bg-white/[0.03]"
+            >
+              {/* Media Image */}
+              <div className={`w-full overflow-hidden ${item.aspect}`}>
+                <img
+                  src={item.img}
+                  alt={item.title}
+                  loading="lazy"
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+              </div>
 
-          {/* Pagination indicator dots */}
-          <div className="flex items-center gap-2 px-3">
-            {filteredItems.map((_, dotIdx) => (
-              <button
-                key={dotIdx}
-                onClick={() => setActiveIndex(dotIdx)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  dotIdx === activeIndex 
-                    ? 'w-7 bg-gradient-to-r from-violet-500 to-amber-400 shadow-md shadow-violet-500/50' 
-                    : 'w-2 bg-white/20 hover:bg-white/40'
-                }`}
-                aria-label={`Go to slide ${dotIdx + 1}`}
-              />
-            ))}
-          </div>
+              {/* Scrim Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
 
-          <button
-            onClick={handleNext}
-            className="w-11 h-11 rounded-full border border-white/20 hover:border-violet-400 bg-white/5 hover:bg-white/15 text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-lg backdrop-blur-md"
-            title="Next photo"
-            aria-label="Next photo"
-          >
-            <ArrowRight className="w-5 h-5" />
-          </button>
+              {/* Video Play Badge for Video Content */}
+              {item.isVideo && (
+                <div 
+                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/60 backdrop-blur-md border border-white/25 flex items-center justify-center text-white shadow-lg group-hover:scale-110 group-hover:bg-gradient-to-tr group-hover:from-violet-600 group-hover:to-pink-500 transition-all"
+                  title="Watch Video Clip"
+                >
+                  <Play className="w-4 h-4 fill-white ml-0.5" />
+                </div>
+              )}
+
+              {/* Category Pill Tag */}
+              <div className="absolute top-4 left-4 pointer-events-none">
+                <span className="px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-[10px] font-mono uppercase tracking-wider text-amber-300 font-semibold border border-white/15">
+                  {item.category}
+                </span>
+              </div>
+
+              {/* Bottom Caption Information */}
+              <div className="absolute bottom-0 inset-x-0 p-4 sm:p-5 pointer-events-none text-left">
+                <h3 className="text-base sm:text-lg font-bold text-white tracking-tight leading-snug drop-shadow-sm">
+                  {item.title}
+                </h3>
+                <p className="text-xs text-zinc-300 mt-1 line-clamp-1 font-normal opacity-90 group-hover:opacity-100 transition-opacity">
+                  {item.subtitle}
+                </p>
+              </div>
+
+            </div>
+          ))}
         </div>
 
-        {/* Swipe Hint for Mobile / Touch Users */}
-        <div className="text-center mt-4">
-          <span className="text-xs text-gray-400 font-medium tracking-wide inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
-            <span>👈 Swipe left or right with your finger to pop out photos 👉</span>
-          </span>
+        {/* 4. Dedicated "View More" Separate Action Area Below Gallery */}
+        <div className="mt-14 sm:mt-16 pt-8 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+          <div>
+            <h4 className="text-base sm:text-lg font-bold text-white">
+              Want to see more live clips & stories?
+            </h4>
+            <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
+              We update weekly jam reels and artist spotlights on our official channel.
+            </p>
+          </div>
+
+          <a
+            href="https://www.instagram.com/reson.at"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/10 hover:bg-white/15 text-white font-semibold text-sm border border-white/20 hover:border-white/40 transition-all shadow-lg hover:scale-105 active:scale-95 shrink-0"
+          >
+            <span>Explore Full Instagram Archive</span>
+            <ExternalLink className="w-4 h-4 text-amber-400" />
+          </a>
         </div>
 
       </div>
+
+      {/* 5. Interactive Lightbox Modal */}
+      {activeItem && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-2xl flex items-center justify-center p-4 sm:p-8 animate-in fade-in duration-200"
+          onClick={() => setLightboxIndex(null)}
+        >
+          {/* Close Button */}
+          <button
+            onClick={() => setLightboxIndex(null)}
+            className="absolute top-5 right-5 sm:top-8 sm:right-8 z-50 p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+            aria-label="Close Lightbox"
+          >
+            <X className="w-6 h-6" />
+          </button>
+
+          {/* Previous Arrow */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setLightboxIndex((prev) => (prev - 1 + filteredItems.length) % filteredItems.length);
+            }}
+            className="absolute left-3 sm:left-6 z-50 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors hover:scale-110 active:scale-95"
+            aria-label="Previous Image"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+
+          {/* Next Arrow */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setLightboxIndex((prev) => (prev + 1) % filteredItems.length);
+            }}
+            className="absolute right-3 sm:right-6 z-50 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors hover:scale-110 active:scale-95"
+            aria-label="Next Image"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+
+          {/* Lightbox Content Container */}
+          <div 
+            className="relative max-w-4xl max-h-[85vh] w-full flex flex-col items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="relative rounded-2xl overflow-hidden max-h-[70vh] border border-white/20 shadow-2xl bg-black">
+              <img
+                src={activeItem.img}
+                alt={activeItem.title}
+                className="w-full h-full max-h-[70vh] object-contain"
+              />
+              {activeItem.isVideo && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/30 pointer-events-none">
+                  <div className="w-16 h-16 rounded-full bg-white/30 backdrop-blur-md border border-white/50 flex items-center justify-center shadow-2xl">
+                    <Play className="w-8 h-8 text-white fill-white ml-1" />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Lightbox Caption & Metadata */}
+            <div className="mt-4 text-center max-w-xl">
+              <span className="px-3 py-1 rounded-full bg-white/10 text-[11px] font-mono uppercase tracking-wider text-amber-300 font-semibold border border-white/15">
+                {activeItem.category}
+              </span>
+              <h3 className="text-xl sm:text-2xl font-black text-white mt-2">
+                {activeItem.title}
+              </h3>
+              <p className="text-sm text-zinc-300 mt-1 font-normal">
+                {activeItem.subtitle}
+              </p>
+            </div>
+          </div>
+
+        </div>
+      )}
+
     </section>
   );
 }
