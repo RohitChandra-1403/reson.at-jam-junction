@@ -68,7 +68,7 @@ export function RollingText({
           >
             {/* Top Rolling Character (Sliding Up Out) */}
             <motion.span
-              className="inline-block transform-gpu will-change-transform"
+              className="inline-block transform-gpu will-change-transform text-amber-200"
               initial={{ y: '0%', opacity: 1, rotateX: 0 }}
               animate={{ 
                 y: '-110%', 
@@ -86,7 +86,7 @@ export function RollingText({
 
             {/* Bottom Rolling Character (Sliding Up Into View) */}
             <motion.span
-              className="absolute left-0 top-0 inline-block transform-gpu will-change-transform"
+              className="absolute left-0 top-0 inline-block transform-gpu will-change-transform text-amber-200"
               initial={{ y: '110%', opacity: 0, rotateX: 45 }}
               animate={{ 
                 y: '0%', 

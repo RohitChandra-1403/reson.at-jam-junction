@@ -8,32 +8,28 @@ export default function Hero({ onRSVPClick }) {
     <section className="relative min-h-[90vh] sm:min-h-[94vh] flex flex-col justify-between overflow-hidden select-none">
       
       {/* 1. Full-Bleed Main Community Photo Canvas */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 overflow-hidden">
         <img 
           src={heroCommunityImg} 
           alt="Reson@ Jam Junction Community in the Lounge" 
-          className="w-full h-full object-cover object-[center_35%] filter brightness-[0.72] contrast-[1.08] saturate-[1.15] scale-[1.02] transform transition-transform duration-1000"
+          className="w-full h-full object-cover object-[center_30%] filter brightness-[0.96] contrast-[1.05] saturate-[1.08] scale-[1.01] transition-transform duration-700"
         />
         
-        {/* Layered Cinematic Vignettes & Gradients for Maximum Readability */}
-        {/* Top-down navbar & status contrast gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-dusk-900/95 via-dusk-900/40 to-transparent pointer-events-none" />
+        {/* Crisp, Targeted Scrims - Kept away from faces to keep photo bright and clear */}
+        {/* Top-down navbar contrast scrim */}
+        <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/80 via-black/35 to-transparent pointer-events-none" />
 
-        {/* Bottom-up seamless transition into next section */}
-        <div className="absolute inset-0 bg-gradient-to-t from-dusk-900 via-dusk-900/85 to-transparent pointer-events-none" />
+        {/* Bottom transition into next section */}
+        <div className="absolute bottom-0 inset-x-0 h-44 bg-gradient-to-t from-dusk-900 via-dusk-900/70 to-transparent pointer-events-none" />
 
-        {/* Left-to-right vignette to give text maximum punch and contrast */}
-        <div className="absolute inset-0 bg-gradient-to-r from-dusk-900/90 via-black/50 to-dusk-900/70 pointer-events-none" />
-
-        {/* Ambient Concert Lighting Auras */}
-        <div className="absolute -top-24 left-1/4 w-[500px] h-[500px] bg-violet-600/30 rounded-full blur-[140px] pointer-events-none animate-pulse-slow" />
-        <div className="absolute bottom-10 right-1/4 w-[450px] h-[450px] bg-amber-500/20 rounded-full blur-[130px] mix-blend-screen pointer-events-none" />
+        {/* Subtle radial concert glow accents */}
+        <div className="absolute -top-16 right-10 w-96 h-96 bg-violet-600/20 rounded-full blur-[120px] pointer-events-none" />
       </div>
 
       {/* 2. Top Banner Row: Live Status Beacon & Community Pill */}
       <div className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 flex flex-wrap items-center justify-between gap-3">
         {/* Live Jam Weekend Status Beacon */}
-        <div className="inline-flex items-center gap-2.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-black/60 border border-emerald-500/40 text-emerald-300 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.6)]">
+        <div className="inline-flex items-center gap-2.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-black/70 border border-emerald-500/50 text-emerald-300 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.6)]">
           <span className="relative flex h-2.5 w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
@@ -44,19 +40,19 @@ export default function Hero({ onRSVPClick }) {
         </div>
 
         {/* Community Proof Pill */}
-        <div className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/60 border border-white/15 text-xs font-semibold text-gray-200 backdrop-blur-xl shadow-lg">
+        <div className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/70 border border-white/20 text-xs font-semibold text-gray-200 backdrop-blur-xl shadow-lg">
           <Users className="w-3.5 h-3.5 text-amber-400" />
           <span>Real Community Lounge • 50+ Jammers</span>
         </div>
       </div>
 
-      {/* 3. Hero Main Narrative Center Block (Written Directly Over Photo) */}
-      <div className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 my-auto py-8 sm:py-12">
-        <div className="max-w-3xl text-left">
+      {/* 3. Hero Main Narrative Center Block (Overlaid with Frosted Glass for Total Legibility) */}
+      <div className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 my-auto py-6 sm:py-10">
+        <div className="max-w-2xl p-6 sm:p-8 rounded-3xl bg-black/65 border border-white/20 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.85)]">
           
           {/* Skiper UI (Skiper27) Animated Rolling Text Banner */}
-          <div className="inline-flex items-center gap-2.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-2xl bg-black/65 border border-violet-400/40 backdrop-blur-2xl shadow-[0_8px_30px_rgba(139,92,246,0.3)] mb-4 sm:mb-6 group hover:border-amber-400/60 transition-all">
-            <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-amber-500 via-pink-500 to-violet-600 p-0.5 shrink-0 flex items-center justify-center">
+          <div className="inline-flex items-center gap-2.5 px-3 sm:px-3.5 py-1.5 rounded-xl bg-white/10 border border-violet-400/40 backdrop-blur-md shadow-md mb-3 sm:mb-4 group hover:border-amber-400/60 transition-all">
+            <div className="w-5 h-5 rounded-md bg-gradient-to-tr from-amber-500 via-pink-500 to-violet-600 p-0.5 shrink-0 flex items-center justify-center">
               <Sparkles className="w-3 h-3 text-white" />
             </div>
             <div className="flex items-center gap-1.5 overflow-hidden">
@@ -65,64 +61,64 @@ export default function Hero({ onRSVPClick }) {
               </span>
               <RollingText 
                 text="Connect , Create and Resonate "
-                speed={0.045}
-                duration={0.65}
+                speed={0.04}
+                duration={0.6}
                 loop={true}
-                loopInterval={4200}
-                className="text-xs sm:text-base font-black font-display tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-pink-400 to-violet-300"
+                loopInterval={4000}
+                className="text-xs sm:text-sm font-bold font-display tracking-tight text-amber-200"
               />
             </div>
           </div>
 
-          {/* Monumental Headline */}
-          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.03] text-white drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)] mb-4 sm:mb-6">
-            Where Music <br />
+          {/* Refined Headline with Requested Phrasing & Balanced Size */}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-[1.1] text-white drop-shadow-[0_2px_15px_rgba(0,0,0,0.9)] mb-3 sm:mb-4">
+            Where{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-pink-400 to-violet-400">
-              Resonates.
-            </span>
+              Creativity
+            </span>{' '}
+            <br className="hidden sm:inline" />
+            Resonates.
           </h1>
 
           {/* Soulful Narrative Paragraph */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-black/55 border border-white/10 backdrop-blur-xl shadow-2xl mb-8 sm:mb-10 max-w-2xl">
-            <p className="text-base sm:text-xl text-gray-200 leading-relaxed font-normal drop-shadow-sm">
-              Step into <strong>Jam Junction</strong> by <strong>reson.at</strong> — Bangalore’s soulful unplugged jam sanctuary. 
-              Bring your guitar, cajon, voice, or simply pull up a chair. No stage, no rehearsals, zero pressure.
-            </p>
-          </div>
+          <p className="text-sm sm:text-base text-gray-200 leading-relaxed font-normal drop-shadow-sm mb-6 max-w-xl">
+            Step into <strong>Jam Junction</strong> by <strong>reson.at</strong> — Bangalore’s soulful unplugged jam sanctuary. 
+            Bring your guitar, cajon, voice, or simply pull up a chair. No stage, no rehearsals, zero pressure.
+          </p>
 
           {/* Premium Action Group */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-5 mb-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
             
             {/* Primary Action Button: Book Tickets */}
             <button 
               onClick={onRSVPClick}
-              className="relative group overflow-hidden px-7 py-4 rounded-full font-bold text-white text-base sm:text-lg tracking-wide transition-all transform hover:scale-105 active:scale-95 shadow-[0_10px_35px_rgba(139,92,246,0.5)] bg-gradient-to-r from-violet-600 via-pink-600 to-amber-500 flex items-center justify-center gap-3 border border-white/30"
+              className="relative group overflow-hidden px-6 py-3.5 rounded-full font-bold text-white text-sm sm:text-base tracking-wide transition-all transform hover:scale-105 active:scale-95 shadow-[0_8px_30px_rgba(139,92,246,0.5)] bg-gradient-to-r from-violet-600 via-pink-600 to-amber-500 flex items-center justify-center gap-2.5 border border-white/30"
               style={{ color: '#FFFFFF' }}
             >
               {/* Sweeping Shimmer Beam */}
               <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-[-25deg] pointer-events-none animate-shimmer-sweep" />
 
-              <Ticket className="w-5 h-5 text-white fill-white/20" />
+              <Ticket className="w-4 h-4 text-white fill-white/20" />
               <span>Book Tickets Now</span>
-              <ChevronRight className="w-5 h-5 text-white/80 group-hover:translate-x-1 transition-transform" />
+              <ChevronRight className="w-4 h-4 text-white/80 group-hover:translate-x-1 transition-transform" />
             </button>
 
             {/* Secondary Action: Virtual Jam Pad */}
             <a 
               href="#jam-pad"
-              className="px-6 py-4 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/25 hover:border-violet-400/60 font-semibold text-base sm:text-lg transition-all backdrop-blur-xl flex items-center justify-center gap-2.5 shadow-xl hover:shadow-violet-600/20 active:scale-95"
+              className="px-5 py-3.5 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/25 hover:border-violet-400/60 font-semibold text-sm sm:text-base transition-all backdrop-blur-xl flex items-center justify-center gap-2 shadow-lg hover:shadow-violet-600/20 active:scale-95"
             >
-              <Music className="w-5 h-5 text-amber-400" />
+              <Music className="w-4 h-4 text-amber-400" />
               <span>Try Jam Lounge</span>
             </a>
 
             {/* Tertiary Action: Visual Diary */}
             <a 
               href="#gallery"
-              className="px-5 py-4 rounded-full bg-black/40 hover:bg-black/60 text-gray-300 hover:text-white border border-white/10 hover:border-white/25 font-semibold text-sm sm:text-base transition-all backdrop-blur-xl flex items-center justify-center gap-2 active:scale-95"
+              className="px-4 py-3.5 rounded-full bg-black/40 hover:bg-black/60 text-gray-300 hover:text-white border border-white/15 hover:border-white/30 font-semibold text-xs sm:text-sm transition-all backdrop-blur-xl flex items-center justify-center gap-1.5 active:scale-95"
             >
               <span>Visual Diary</span>
-              <ChevronRight className="w-4 h-4 text-violet-400" />
+              <ChevronRight className="w-3.5 h-3.5 text-violet-400" />
             </a>
 
           </div>
