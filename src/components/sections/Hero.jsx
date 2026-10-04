@@ -1,6 +1,7 @@
 import React from 'react';
 import { Radio, ChevronRight, Sparkles, Music, Users, MapPin, Play, Ticket, Disc } from 'lucide-react';
 import heroCommunityImg from '@/assets/images/hero-reson-jam.jpg';
+import { RollingText } from '@/components/v1/skiper27';
 
 export default function Hero({ onRSVPClick }) {
   return (
@@ -28,12 +29,34 @@ export default function Hero({ onRSVPClick }) {
               </span>
             </div>
             
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black mb-4 sm:mb-6 tracking-tight leading-[1.08] text-white">
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black mb-3 sm:mb-4 tracking-tight leading-[1.08] text-white">
               Where Music <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-amber-300 to-sunset-500">
                 Resonates.
               </span>
             </h1>
+
+            {/* Skiper UI (Skiper27) Animated Rolling Text Banner */}
+            <div className="my-4 sm:my-5 p-3 sm:p-3.5 rounded-2xl bg-gradient-to-r from-violet-950/50 via-white/[0.03] to-amber-950/40 border border-violet-500/30 backdrop-blur-xl flex items-center gap-3 shadow-[0_8px_25px_rgba(139,92,246,0.15)] group hover:border-amber-400/40 transition-all">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 via-pink-500 to-violet-600 p-0.5 shrink-0 shadow-md">
+                <div className="w-full h-full bg-dusk-900 rounded-[10px] flex items-center justify-center">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                </div>
+              </div>
+              <div className="overflow-hidden">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-amber-400/80 block leading-tight">
+                  Motto • Skiper27 Rolling Text
+                </span>
+                <RollingText 
+                  text="Connect , Create and Resonate "
+                  speed={0.045}
+                  duration={0.65}
+                  loop={true}
+                  loopInterval={4200}
+                  className="text-sm sm:text-lg font-black font-display tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-pink-400 to-violet-400"
+                />
+              </div>
+            </div>
             
             <p className="text-base sm:text-xl text-gray-300 mb-6 sm:mb-8 max-w-xl leading-relaxed font-normal">
               Step into <strong>Jam Junction</strong> by <strong>reson.at</strong> — Bangalore’s soulful unplugged jam sanctuary. 
